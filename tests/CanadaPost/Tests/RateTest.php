@@ -2,6 +2,7 @@
 
 namespace CanadaPost\Tests;
 
+use CanadaPost\Rate;
 use CanadaPost\Request;
 use PHPUnit_Framework_TestCase;
 use SimpleXMLElement;
@@ -14,14 +15,25 @@ use SimpleXMLElement;
 class RateTest extends PHPUnit_Framework_TestCase
 {
 
-    public function testGetRates()
+    /**
+     * @var Rate
+     */
+    private $rate;
+
+    public function setUp()
     {
         // Your username, password and customer number are imported
         // from the following file: CanadaPost\Tests\_files\user.ini
         $userProperties = parse_ini_file(__DIR__ . '/_files/user.ini');
         $username = $userProperties['username'];
         $password = $userProperties['password'];
-        $mailedBy = $userProperties['customerNumber'];
+        $customer_number = $userProperties['customerNumber'];
+        $this->rate = new Rate($username, $password, $customer_number);
+    }
+
+
+    public function testGetRates()
+    {
         $requestInstance = new Request();
         $endPointUrl = 'https://ct.soa-gw.canadapost.ca/rs/ship/price';
         $originPostalCode = 'H2B1A0';
@@ -30,7 +42,7 @@ class RateTest extends PHPUnit_Framework_TestCase
         $request = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v3">
-  <customer-number>{$mailedBy}</customer-number>
+  <customer-number>{$this->rate->getCustomerNumber()}</customer-number>
   <parcel-characteristics>
     <weight>{$weight}</weight>
   </parcel-characteristics>
@@ -46,7 +58,7 @@ XML;
                 'Accept' => 'application/vnd.cpc.ship.rate-v3+xml',
                 'Content-type' => 'application/vnd.cpc.ship.rate-v3+xml'
         ];
-        $response = $requestInstance->request('POST', [$username, $password], $request, $endPointUrl, $headers);
+        $response = $requestInstance->request('POST', [$this->rate->getUsername(), $this->rate->getPassword()], $request, $endPointUrl, $headers);
         if ($response->getResponse()->{'price-quote'} instanceof SimpleXMLElement) {
             /** @var SimpleXMLElement $service */
             foreach ($response->getResponse()->{'price-quote'} as $quote) {
