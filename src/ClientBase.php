@@ -22,6 +22,7 @@ abstract class ClientBase
     protected $baseUrl;
     protected $username;
     protected $password;
+    protected $customerNumber;
 
     public function __construct(array $config = [])
     {
@@ -78,6 +79,7 @@ abstract class ClientBase
 
         $this->username = $config['username'];
         $this->password = $config['password'];
+        $this->customerNumber = $config['customerNumber'];
     }
 
     protected function baseUrl(array $config = [])
