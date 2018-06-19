@@ -1,6 +1,6 @@
-# ![PHP Canada Post API](https://rawgit.com/thejacer87/php-canadapost-api/master/php-canadapost-api-logo.svg "PHP Canada Post API") PHP Canada Post API
+# ![PHP Canada Post API](https://rawgit.com/thejacer87/php-canadapost-api/master/php-canadapost-api-logo.jpg "PHP Canada Post API") PHP Canada Post API
 
-This library is aimed at wrapping the Canada Post API into a simple to use PHP Library. Currently expected to start with the Rating API and build from there. Feel free to contribute. Heavily inspired by the [PHP UPS API](https://github.com/gabrielbull/php-ups-api)
+This library is aimed at wrapping the Canada Post API into a simple to use PHP Library. Currently expected to start with the Rating API and build from there. Feel free to contribute. Heavily inspired by the [PHP UPS API](https://github.com/gabrielbull/php-ups-api). Initial funding provided by [Acro Media Inc](https://www.acromedia.com/).
 
 ## Table Of Contents
 
