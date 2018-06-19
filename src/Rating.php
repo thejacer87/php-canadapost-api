@@ -4,14 +4,14 @@ namespace CanadaPost;
 
 class Rating extends ClientBase
 {
-    public function getRates($originPostalCode, $postalCode)
+    public function getRates($originPostalCode, $postalCode, $weight)
     {
         $xmlRequest = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v3">
   <customer-number>{$this->customerNumber}</customer-number>
   <parcel-characteristics>
-    <weight>1</weight>
+    <weight>{$weight}</weight>
   </parcel-characteristics>
   <origin-postal-code>{$originPostalCode}</origin-postal-code>
   <destination>
