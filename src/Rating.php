@@ -8,6 +8,13 @@ class Rating extends ClientBase
 {
     public function getRates($originPostalCode, $postalCode, $weight)
     {
+        // Weight cannot be less than or equal to 0.
+        $weight = $weight <= 0 ? 1 : $weight;
+        // Canada Post API needs all postal codes to be uppercase and no spaces.
+        $originPostalCode = strtoupper(str_replace(' ', '', $originPostalCode));
+        $postalCode = strtoupper(str_replace(' ', '', $postalCode));
+
+        // todo convert this to use Array2XML.
         $xmlRequest = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <mailing-scenario xmlns="http://www.canadapost.ca/ws/ship/rate-v3">
