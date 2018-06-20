@@ -22,6 +22,7 @@ abstract class ClientBase
     protected $baseUrl;
     protected $username;
     protected $password;
+    protected $customerNumber;
 
     public function __construct(array $config = [])
     {
@@ -69,6 +70,42 @@ abstract class ClientBase
         return $this->parseResponse($response);
     }
 
+    public function post($endpoint, array $headers = [], $payload)
+    {
+        $url = $this->baseUrl . '/' . $endpoint;
+
+        try {
+            $client = new GuzzleClient();
+            $options = [
+                'auth' => [$this->username, $this->password],
+                'headers' => $headers,
+                'body' => $payload,
+            ];
+
+            // Enable debug option on development environment.
+            if ($this->config['env'] === self::ENV_DEVELOPMENT) {
+                $options['debug'] = TRUE;
+            }
+
+            $response = $client->request('POST', $url, $options);
+        }
+        catch (GuzzleClientException $exception) {
+            $response = $exception->getResponse();
+            $body = $this->parseResponse($response);
+
+            throw new ClientException(
+                $exception->getMessage(),
+                $this->parseResponse($response),
+                $exception->getRequest(),
+                $response,
+                $exception->getPrevious(),
+                $exception->getHandlerContext()
+            );
+        }
+
+        return $this->parseResponse($response);
+    }
+
     protected function setCredentials(array $config = [])
     {
         if (!isset($config['username']) || !isset($config['password'])) {
@@ -78,6 +115,7 @@ abstract class ClientBase
 
         $this->username = $config['username'];
         $this->password = $config['password'];
+        $this->customerNumber = $config['customerNumber'];
     }
 
     protected function baseUrl(array $config = [])
