@@ -13,8 +13,7 @@ This library is aimed at wrapping the Canada Post API into a simple to use PHP L
 
 This library uses PHP 5.5.9+.
 
-To use the Canada Post API, you have to [get you API info from Canada Post](https://www.canadapost.ca/cpotools/apps/drc/home). For every request,
-you will have to provide the username, password, your Canada Post business number.
+To use the Canada Post API, you have to [get your API info from Canada Post](https://www.canadapost.ca/cpotools/apps/drc/home). For every request, you will have to provide the username, password. And some will need your Canada Post business number.
 
 <a name="installation"></a>
 ## Installation
@@ -25,9 +24,6 @@ run the Composer command to install the latest stable version of PHP Canada Post
 ```shell
 composer require thejacer87/canadapost-api
 ```
-
-If not using composer, you must also include these libraries: [Guzzle](https://github.com/guzzle/guzzle), [Guzzle Promises](https://github.com/guzzle/promises), [Guzzle PSR7](https://github.com/guzzle/psr7), [PHP-Fig PSR Log](https://github.com/php-fig/log), and [PHP-Fig HTTP Message](https://github.com/php-fig/http-message).
-
 
 <a name="license-section"></a>
 ## License
