@@ -38,6 +38,23 @@ XML;
         );
         $curl_response = curl_exec($curl);
 
-        return $curl_response;
+        $xml = simplexml_load_string('<root>' . preg_replace('/<\?xml.*\?>/','',$curl_response) . '</root>');
+        $canadapost_rates = [];
+        if ($xml && $xml->{'price-quotes'}) {
+            $priceQuotes = $xml->{'price-quotes'}->children('http://www.canadapost.ca/ws/ship/rate-v3');
+            if ($priceQuotes->{'price-quote'}) {
+                foreach ($priceQuotes as $priceQuote) {
+                    $code = $priceQuote->{'service-code'}->__toString();
+                    $price = $priceQuote->{'price-details'}->{'due'}->__toString();
+                    $service_name = $priceQuote->{'service-name'}->__toString();
+                    $canadapost_rates[] = [
+                            'code' => $code,
+                            'price' => $price,
+                            'name' => $service_name,
+                    ];
+                }
+            }
+        }
+        return $canadapost_rates;
     }
 }
