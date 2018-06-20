@@ -2,6 +2,8 @@
 
 namespace CanadaPost;
 
+use LSS\Array2XML;
+
 class Rating extends ClientBase
 {
     public function getRates($originPostalCode, $postalCode, $weight)
@@ -21,40 +23,15 @@ class Rating extends ClientBase
   </destination>
 </mailing-scenario>
 XML;
-        // Set up curl request.
-        $curl = curl_init('https://ct.soa-gw.canadapost.ca/rs/ship/price');
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-        curl_setopt($curl, CURLOPT_POST, TRUE);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $xmlRequest);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, $this->username . ':' . $this->password);
-        curl_setopt(
-                $curl, CURLOPT_HTTPHEADER, array(
-                        'Content-Type: application/vnd.cpc.ship.rate-v3+xml',
-                        'Accept: application/vnd.cpc.ship.rate-v3+xml',
-                )
-        );
-        $curl_response = curl_exec($curl);
 
-        $xml = simplexml_load_string('<root>' . preg_replace('/<\?xml.*\?>/','',$curl_response) . '</root>');
-        $canadapost_rates = [];
-        if ($xml && $xml->{'price-quotes'}) {
-            $priceQuotes = $xml->{'price-quotes'}->children('http://www.canadapost.ca/ws/ship/rate-v3');
-            if ($priceQuotes->{'price-quote'}) {
-                foreach ($priceQuotes as $priceQuote) {
-                    $code = $priceQuote->{'service-code'}->__toString();
-                    $price = $priceQuote->{'price-details'}->{'due'}->__toString();
-                    $service_name = $priceQuote->{'service-name'}->__toString();
-                    $canadapost_rates[] = [
-                            'code' => $code,
-                            'price' => $price,
-                            'name' => $service_name,
-                    ];
-                }
-            }
-        }
-        return $canadapost_rates;
+      $response = $this->post(
+        "rs/ship/price",
+        [
+          'Content-Type' => 'application/vnd.cpc.ship.rate-v3+xml',
+          'Accept' => 'application/vnd.cpc.ship.rate-v3+xml',
+        ],
+        $xmlRequest
+      );
+      return $response;
     }
 }
