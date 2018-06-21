@@ -108,14 +108,14 @@ abstract class ClientBase
 
     protected function setCredentials(array $config = [])
     {
-        if (!isset($config['username']) || !isset($config['password'])) {
-            $message = 'A username and a password are required for authenticated to the Canada Post API.';
+        if (!isset($config['username']) || !isset($config['password']) || !isset($config['customer_number'])) {
+            $message = 'A username, password and customer number are required for authenticated to the Canada Post API.';
             throw new \InvalidArgumentException($message);
         }
 
         $this->username = $config['username'];
         $this->password = $config['password'];
-        $this->customerNumber = $config['customerNumber'];
+        $this->customerNumber = $config['customer_number'];
     }
 
     protected function baseUrl(array $config = [])
