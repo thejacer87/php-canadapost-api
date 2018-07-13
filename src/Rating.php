@@ -6,7 +6,20 @@ use LSS\Array2XML;
 
 class Rating extends ClientBase
 {
-    public function getRates($originPostalCode, $postalCode, $weight)
+    /**
+     * Get the shipping rates for the given locations and weight.
+     *
+     * @param $originPostalCode
+     *   The origin postal code.
+     * @param $postalCode
+     *   The destination postal code.
+     * @param $weight
+     *   The weight of the package (kg).
+     * @param array $options
+     *
+     * @return \DOMDocument
+     */
+    public function getRates($originPostalCode, $postalCode, $weight, array $options = [])
     {
         // Canada Post API needs all postal codes to be uppercase and no spaces.
         $originPostalCode = strtoupper(str_replace(' ', '', $originPostalCode));

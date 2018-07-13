@@ -13,17 +13,54 @@ use LSS\XML2Array;
  */
 abstract class ClientBase
 {
+    /**
+     * Environment variables.
+     */
     const ENV_DEVELOPMENT = 'dev';
     const ENV_PRODUCTION = 'prod';
+
+    /**
+     * Base URLs.
+     */
     const BASE_URL_DEVELOPMENT = 'https://ct.soa-gw.canadapost.ca';
     const BASE_URL_PRODUCTION = 'https://soa-gw.canadapost.ca';
 
+    /**
+     * @var array $config
+     *   The configuration array.
+     */
     protected $config;
+
+    /**
+     * @var string $baseUrl
+     *   The base Canada Post API url.
+     */
     protected $baseUrl;
+
+    /**
+     * @var array $username
+     *   The Canada Post API username.
+     */
     protected $username;
+
+    /**
+     * @var array $password
+     *   The Canada Post API password.
+     */
     protected $password;
+
+    /**
+     * @var array $customerNumber
+     *   The Canada Post API customer number.
+     */
     protected $customerNumber;
 
+    /**
+     * ClientBase constructor.
+     *
+     * @param array $config
+     *   The configuration array.
+     */
     public function __construct(array $config = [])
     {
         // Default to development environment.
@@ -138,6 +175,12 @@ abstract class ClientBase
         return $this->parseResponse($response);
     }
 
+    /**
+     * Set the API configuration array for the Client.
+     *
+     * @param array $config
+     *   The configuration array.
+     */
     protected function setCredentials(array $config = [])
     {
         if (!isset($config['username']) || !isset($config['password']) || !isset($config['customer_number'])) {
@@ -201,6 +244,16 @@ abstract class ClientBase
         return $this->baseUrl;
     }
 
+    /**
+     * Parse the xml response into an array,
+     *
+     * @param Response $response
+     *   The xml response.
+     *
+     * @return \DOMDocument
+     *   The response array.
+     * @throws \Exception
+     */
     protected function parseResponse(Response $response)
     {
         $xml = new \DomDocument();
