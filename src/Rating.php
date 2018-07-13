@@ -13,16 +13,16 @@ class Rating extends ClientBase
         $postalCode = strtoupper(str_replace(' ', '', $postalCode));
 
         $content = [
-          'customer-number' => $this->customerNumber,
-          'parcel-characteristics' => [
-            'weight' => $weight,
-          ],
-          'origin-postal-code' => $originPostalCode,
-          'destination' => [
-            'domestic' => [
-              'postal-code' => $postalCode,
+            'customer-number' => $this->customerNumber,
+            'parcel-characteristics' => [
+                'weight' => $weight,
             ],
-          ],
+            'origin-postal-code' => $originPostalCode,
+            'destination' => [
+                'domestic' => [
+                    'postal-code' => $postalCode,
+                ],
+            ],
         ];
         $xml = Array2XML::createXML('mailing-scenario', $content);
         $envelope = $xml->documentElement;
@@ -30,12 +30,13 @@ class Rating extends ClientBase
         $payload = $xml->saveXML();
 
         $response = $this->post(
-          "rs/ship/price",
-          [
-            'Content-Type' => 'application/vnd.cpc.ship.rate-v3+xml',
-            'Accept' => 'application/vnd.cpc.ship.rate-v3+xml',
-          ],
-          $payload
+            "rs/ship/price",
+            [
+                'Content-Type' => 'application/vnd.cpc.ship.rate-v3+xml',
+                'Accept' => 'application/vnd.cpc.ship.rate-v3+xml',
+            ],
+            $payload,
+            $options
         );
         return $response;
     }

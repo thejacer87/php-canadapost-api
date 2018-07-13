@@ -35,13 +35,30 @@ abstract class ClientBase
         $this->baseUrl($this->config);
     }
 
-    public function get($endpoint, array $headers = [])
+    /**
+     * Send the GET request to the Canada Post API.
+     *
+     * @param string $endpoint
+     *   The endpoint to send the request.
+     * @param array $headers
+     *   The HTTP headers array.
+     * @param array $options
+     *   The options array.
+     *
+     * @return \DOMDocument
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function get($endpoint, array $headers = [], array $options = [])
     {
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
             $client = new GuzzleClient();
-            $options = [
+            if (isset($options['handler'])) {
+                $client = new GuzzleClient(['handler' => $options['handler']]);
+                unset($options['handler']);
+            }
+            $options += [
                 'auth' => [$this->username, $this->password],
                 'headers' => $headers,
             ];
@@ -52,10 +69,8 @@ abstract class ClientBase
             }
 
             $response = $client->request('GET', $url, $options);
-        }
-        catch (GuzzleClientException $exception) {
+        } catch (GuzzleClientException $exception) {
             $response = $exception->getResponse();
-            $body = $this->parseResponse($response);
 
             throw new ClientException(
                 $exception->getMessage(),
@@ -70,13 +85,32 @@ abstract class ClientBase
         return $this->parseResponse($response);
     }
 
-    public function post($endpoint, array $headers = [], $payload)
+    /**
+     * Send the POST request to the Canada Post API.
+     *
+     * @param string $endpoint
+     *   The endpoint to send the request.
+     * @param array $headers
+     *   The HTTP headers array.
+     * @param string $payload
+     *   The payload to POST.
+     * @param array $options
+     *   The options array.
+     *
+     * @return \DOMDocument
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function post($endpoint, array $headers = [], $payload, array $options = [])
     {
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
             $client = new GuzzleClient();
-            $options = [
+            if (isset($options['handler'])) {
+                $client = new GuzzleClient(['handler' => $options['handler']]);
+                unset($options['handler']);
+            }
+            $options += [
                 'auth' => [$this->username, $this->password],
                 'headers' => $headers,
                 'body' => $payload,
@@ -88,10 +122,8 @@ abstract class ClientBase
             }
 
             $response = $client->request('POST', $url, $options);
-        }
-        catch (GuzzleClientException $exception) {
+        } catch (GuzzleClientException $exception) {
             $response = $exception->getResponse();
-            $body = $this->parseResponse($response);
 
             throw new ClientException(
                 $exception->getMessage(),
@@ -118,6 +150,25 @@ abstract class ClientBase
         $this->customerNumber = $config['customer_number'];
     }
 
+    /**
+     * Get the API configuration array from the Client.
+     * @return array
+     *   The configuration array.
+     */
+    public function getCredentials()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Return the base url for the Canada Post API.
+     *
+     * @param array $config
+     *
+     * @return mixed|string
+     *   The base url.
+     * @throws \InvalidArgumentException
+     */
     protected function baseUrl(array $config = [])
     {
         if (isset($this->baseUrl)) {
