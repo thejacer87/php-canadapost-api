@@ -9,13 +9,14 @@ class Rating extends ClientBase
     /**
      * Get the shipping rates for the given locations and weight.
      *
-     * @param $originPostalCode
+     * @param string $originPostalCode
      *   The origin postal code.
-     * @param $postalCode
+     * @param string $postalCode
      *   The destination postal code.
-     * @param $weight
+     * @param float $weight
      *   The weight of the package (kg).
      * @param array $options
+     *   The options to pass along to the Guzzle Client.
      *
      * @return \DOMDocument
      */

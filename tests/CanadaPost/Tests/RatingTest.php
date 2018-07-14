@@ -16,7 +16,9 @@ class RatingTest extends PHPUnit_Framework_TestCase
 {
 
     /**
-     * @var Rating $ratingService
+     * The Rating service.
+     *
+     * @var Rating
      */
     protected $ratingService;
 
@@ -47,6 +49,7 @@ class RatingTest extends PHPUnit_Framework_TestCase
         $handler = HandlerStack::create($mock);
         $response = $this->ratingService->getRates('', '', 1, ['handler' => $handler]);
         foreach ($response['price-quotes'] as $quotes) {
+            $this->assertTrue(is_array($quotes));
             foreach ($quotes as $rate) {
                 $this->assertTrue(is_array($rate));
                 $this->assertNotEmpty($rate['service-code']);

@@ -26,32 +26,37 @@ abstract class ClientBase
     const BASE_URL_PRODUCTION = 'https://soa-gw.canadapost.ca';
 
     /**
-     * @var array $config
-     *   The configuration array.
+     * The configuration array.
+     *
+     * @var array
      */
     protected $config;
 
     /**
-     * @var string $baseUrl
-     *   The base Canada Post API url.
+     * The base Canada Post API url.
+     *
+     * @var string
      */
     protected $baseUrl;
 
     /**
-     * @var array $username
-     *   The Canada Post API username.
+     * The Canada Post API username.
+     *
+     * @var array
      */
     protected $username;
 
     /**
-     * @var array $password
-     *   The Canada Post API password.
+     * The Canada Post API password.
+     *
+     * @var array
      */
     protected $password;
 
     /**
-     * @var array $customerNumber
-     *   The Canada Post API customer number.
+     * The Canada Post API customer number.
+     *
+     * @var array
      */
     protected $customerNumber;
 
@@ -80,7 +85,11 @@ abstract class ClientBase
      * @param array $headers
      *   The HTTP headers array.
      * @param array $options
-     *   The options array.
+     *   An array of options. Supported options are all request options
+     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
+     * plus the following:
+     *     - handler: Don't use unless you have a valid reason or for unit
+     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
      *
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -90,11 +99,7 @@ abstract class ClientBase
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
-            $client = new GuzzleClient();
-            if (isset($options['handler'])) {
-                $client = new GuzzleClient(['handler' => $options['handler']]);
-                unset($options['handler']);
-            }
+            $client = $this->buildClient($options);
             $options += [
                 'auth' => [$this->username, $this->password],
                 'headers' => $headers,
@@ -132,7 +137,11 @@ abstract class ClientBase
      * @param string $payload
      *   The payload to POST.
      * @param array $options
-     *   The options array.
+     *   The options array. Supported options are all request options
+     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
+     * plus the following:
+     *     - handler: Don't use unless you have a valid reason or for unit
+     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
      *
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -142,11 +151,7 @@ abstract class ClientBase
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
-            $client = new GuzzleClient();
-            if (isset($options['handler'])) {
-                $client = new GuzzleClient(['handler' => $options['handler']]);
-                unset($options['handler']);
-            }
+            $client = $this->buildClient($options);
             $options += [
                 'auth' => [$this->username, $this->password],
                 'headers' => $headers,
@@ -191,16 +196,6 @@ abstract class ClientBase
         $this->username = $config['username'];
         $this->password = $config['password'];
         $this->customerNumber = $config['customer_number'];
-    }
-
-    /**
-     * Get the API configuration array from the Client.
-     * @return array
-     *   The configuration array.
-     */
-    public function getCredentials()
-    {
-        return $this->config;
     }
 
     /**
@@ -260,5 +255,27 @@ abstract class ClientBase
         $xml->loadXML($response->getBody());
 
         return XML2Array::createArray($xml->saveXML());
+    }
+
+    /**
+     * Build the Guzzle client.
+     *
+     * @param array $options
+     *   The options array.
+     *
+     * @return \GuzzleHttp\Client
+     */
+    protected function buildClient(array &$options) {
+        if (!isset($options['debug']) && $this->config['env'] === self::ENV_DEVELOPMENT) {
+            $options['debug'] = TRUE;
+        }
+
+        if (!isset($options['handler'])) {
+            return new GuzzleClient();
+        }
+
+        $client = new GuzzleClient(['handler' => $options['handler']]);
+        unset($options['handler']);
+        return $client;
     }
 }
