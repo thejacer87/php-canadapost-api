@@ -52,10 +52,12 @@ class Rating extends ClientBase
                     'postal-code' => $postalCode,
                 ],
             ],
-            'options' => [
-              'option' => $this->getOptionCodes($options),
-            ],
         ];
+
+        if ($options['option_codes']) {
+            $content['options']['option'] = $this->getOptionCodes($options);
+        }
+
         $xml = Array2XML::createXML('mailing-scenario', $content);
         $envelope = $xml->documentElement;
         $envelope->setAttribute('xmlns', 'http://www.canadapost.ca/ws/ship/rate-v3');
@@ -83,10 +85,6 @@ class Rating extends ClientBase
      *  The list of options with the option-code.
      */
     private function getOptionCodes(array $options) {
-      if (!$options['option_codes']) {
-        return [];
-      }
-
       $valid_options= [];
       foreach ($options['option_codes'] as $optionCode) {
         if (!in_array(strtoupper($optionCode), $this::$VALID_OPTION_CODES)) {
