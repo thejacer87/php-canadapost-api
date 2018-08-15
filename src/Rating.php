@@ -54,7 +54,7 @@ class Rating extends ClientBase
             ],
         ];
 
-        if ($options['option_codes']) {
+        if (!empty($options['option_codes'])) {
             $content['options']['option'] = $this->getOptionCodes($options);
         }
 
