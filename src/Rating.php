@@ -93,7 +93,7 @@ class Rating extends ClientBase
       $valid_options= [];
       foreach ($options['option_codes'] as $optionCode) {
         if (!in_array(strtoupper($optionCode), self::getOptionCodes())) {
-          break;
+          continue;
         }
         // @todo Perhaps we should check for conflicts here, might be overkill.
         // From Canada Post docs:
