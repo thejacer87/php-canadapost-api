@@ -6,7 +6,6 @@ use LSS\Array2XML;
 
 class Rating extends ClientBase
 {
-
     /**
      * Get the shipping rates for the given locations and weight.
      *
