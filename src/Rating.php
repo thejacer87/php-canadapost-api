@@ -84,7 +84,7 @@ class Rating extends ClientBase
      * @return array
      *  The list of options with the option-code.
      */
-    private function getOptionCodes(array $options) {
+    protected function getOptionCodes(array $options) {
       $valid_options= [];
       foreach ($options['option_codes'] as $optionCode) {
         if (!in_array(strtoupper($optionCode), $this::$VALID_OPTION_CODES)) {
