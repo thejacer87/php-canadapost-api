@@ -73,12 +73,12 @@ class Rating extends ClientBase
     public static function getOptionCodes()
     {
         return [
-          'SO'   => 'Signature (SO)',
-          'PA18' => 'Proof of Age Required - 18 (PA18)',
-          'PA19' => 'Proof of Age Required - 19 (PA19)',
-          'HFP'  => 'Card for pickup (HFP)',
-          'DNS'  => 'Do not safe drop (DNS)',
-          'LAD'  => 'Leave at door - do not card (LAD)',
+            'SO' => 'Signature (SO)',
+            'PA18' => 'Proof of Age Required - 18 (PA18)',
+            'PA19' => 'Proof of Age Required - 19 (PA19)',
+            'HFP' => 'Card for pickup (HFP)',
+            'DNS' => 'Do not safe drop (DNS)',
+            'LAD' => 'Leave at door - do not card (LAD)',
         ];
     }
 }

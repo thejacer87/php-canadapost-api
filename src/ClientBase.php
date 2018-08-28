@@ -255,9 +255,10 @@ abstract class ClientBase
      *
      * @return \GuzzleHttp\Client
      */
-    protected function buildClient(array &$options) {
+    protected function buildClient(array &$options)
+    {
         if (!isset($options['debug']) && $this->config['env'] === self::ENV_DEVELOPMENT) {
-            $options['debug'] = TRUE;
+            $options['debug'] = true;
         }
 
         if (!isset($options['handler'])) {
@@ -278,8 +279,9 @@ abstract class ClientBase
      * @return array
      *  The list of options with the option-code.
      */
-    protected function parseOptionCodes(array $options) {
-        $valid_options= [];
+    protected function parseOptionCodes(array $options)
+    {
+        $valid_options = [];
         foreach ($options['option_codes'] as $optionCode) {
             if (!in_array(strtoupper($optionCode), self::getOptionCodes())) {
                 break;
