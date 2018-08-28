@@ -4,7 +4,7 @@ namespace CanadaPost;
 
 use LSS\Array2XML;
 
-class Shipment extends ClientBase
+class NCShipment extends ClientBase
 {
 
     /**
@@ -47,6 +47,29 @@ class Shipment extends ClientBase
             ],
             $payload,
             $options
+        );
+        return $response;
+    }
+
+    /**
+     * Get an artifact from Canada Post server.
+     * @param string $url
+     *   The url of the file to retrieve from the Canada Post server.
+     * @param array $options
+     *   The options array.
+     *
+     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getArtifact($url, array $options = [])
+    {
+        $url = str_replace('https://ct.soa-gw.canadapost.ca/', '', $url);
+        $response = $this->getFile(
+            $url,
+            'pdf',
+            $options + [
+                'raw_response' => true
+            ]
         );
         return $response;
     }

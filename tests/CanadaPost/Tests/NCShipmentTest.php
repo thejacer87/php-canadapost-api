@@ -2,7 +2,7 @@
 
 namespace CanadaPost\Tests;
 
-use CanadaPost\Shipment;
+use CanadaPost\NCShipment;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
@@ -19,7 +19,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     /**
      * The Shipment service.
      *
-     * @var Shipment
+     * @var NCShipment
      */
     protected $shipmentService;
 
@@ -33,13 +33,13 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
             'password' => 'password',
             'customer_number' => 'customer_number',
         ];
-        $this->shipmentService = new Shipment($config);
+        $this->shipmentService = new NCShipment($config);
     }
 
     /**
      * Test the POST request to create a non-contract shipment from Canada Post.
      *
-     * @covers Shipment::createNCShipment()
+     * @covers NCShipment::createNCShipment()
      * @test
      */
     public function createNCShipment()
@@ -88,6 +88,25 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('label', $links[3]['@attributes']['rel']);
         $this->assertEquals('application/pdf', $links[3]['@attributes']['media-type']);
 
+    }
+
+    /**
+     * Test the GET request to retrieve an artifact from Canada Post.
+     *
+     * @covers NCShipment::getArtifact()
+     * @test
+     */
+    public function getArtifact() {
+        $body = file_get_contents(__DIR__
+            . '/../Mocks/canadapost.pdf');
+        $mock = new MockHandler([
+            new Response(200, [], $body),
+        ]);
+        $handler = HandlerStack::create($mock);
+        $response = $this->shipmentService->getArtifact("", ['handler' => $handler]);
+
+        // Compares the pdfs.
+        $this->assertEquals(0, strcmp($body, $response->getContents()));
     }
 
 }

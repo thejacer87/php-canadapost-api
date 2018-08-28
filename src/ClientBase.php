@@ -91,7 +91,7 @@ abstract class ClientBase
      *     - handler: Don't use unless you have a valid reason or for unit
      *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
      *
-     * @return \DOMDocument
+     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function get($endpoint, array $headers = [], array $options = [])
@@ -119,7 +119,39 @@ abstract class ClientBase
             );
         }
 
-        return $this->parseResponse($response);
+        if (empty($options['raw_response'])) {
+            return $this->parseResponse($response);
+        }
+
+        return $response->getBody();
+    }
+
+    /**
+     * Send the GET request to the Canada Post API.
+     *
+     * @param string $endpoint
+     *   The endpoint to send the request.
+     * @param string $fileType
+     *   The file type of the file to retrieve.
+     * @param array $options
+     *   An array of options. Supported options are all request options
+     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
+     * plus the following:
+     *     - handler: Don't use unless you have a valid reason or for unit
+     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
+     *
+     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getFile($endpoint, $fileType, array $options = []) {
+      return $this->get(
+          $endpoint,
+          [
+              'Accept' => 'application/' . $fileType,
+              'Accept-Language' => 'en-CA'
+          ],
+          $options
+          );
     }
 
     /**
