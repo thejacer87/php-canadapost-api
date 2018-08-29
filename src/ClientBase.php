@@ -143,15 +143,16 @@ abstract class ClientBase
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFile($endpoint, $fileType, array $options = []) {
-      return $this->get(
-          $endpoint,
-          [
-              'Accept' => 'application/' . $fileType,
-              'Accept-Language' => 'en-CA'
-          ],
-          $options
-          );
+    public function getFile($endpoint, $fileType, array $options = [])
+    {
+        return $this->get(
+            $endpoint,
+            [
+                'Accept' => 'application/' . $fileType,
+                'Accept-Language' => 'en-CA'
+            ],
+            $options
+        );
     }
 
     /**
@@ -331,5 +332,17 @@ abstract class ClientBase
         }
 
         return $valid_options;
+    }
+
+    /**
+     * @param $address
+     */
+    protected function verifyPostalCode($address)
+    {
+       if (empty($address['postal_code'])) {
+           return;
+       }
+
+       strtoupper(str_replace(' ', '', $address['postal_code']));
     }
 }
