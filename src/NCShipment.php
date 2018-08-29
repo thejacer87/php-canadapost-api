@@ -216,7 +216,7 @@ class NCShipment extends ClientBase
         $this->verifyPostalCode($sender);
         $this->verifyPostalCode($destination);
         $shipment_info = [
-            'requested-shipping-point' => $destination['postal-zip-code'],
+            'requested-shipping-point' => $destination['address-details']['postal-zip-code'],
             'delivery-spec' => [
                 'service-code' => $parcel['service_code'],
                 'sender' => $sender,
