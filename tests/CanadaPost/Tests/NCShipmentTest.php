@@ -50,8 +50,13 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
             new Response(200, [], $body),
         ]);
         $handler = HandlerStack::create($mock);
-        $shipment = $this->shipmentService->createNCShipment('', [], [], [],
-            ['handler' => $handler]);
+        $shipment = $this->shipmentService->createNCShipment(
+            '123456789012',
+            $this->mockAddress(),
+            $this->mockAddress(),
+            $this->mockParcel(),
+            ['handler' => $handler]
+        );
 
         $this->checkShippingResponse($shipment);
     }
@@ -70,7 +75,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
             new Response(200, [], $body),
         ]);
         $handler = HandlerStack::create($mock);
-        $response = $this->shipmentService->getArtifact('', ['handler' => $handler]);
+        $response = $this->shipmentService->getArtifact('http://test.com', ['handler' => $handler]);
 
         // Compares the pdfs.
         $this->assertEquals(0, strcmp($body, $response->getContents()));
@@ -96,9 +101,9 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
             new Response(200, [], $getReceiptBody),
         ]);
         $handler = HandlerStack::create($mock);
-        $shipment = $this->shipmentService->getNCShipment('', '', ['handler' => $handler]);
-        $details = $this->shipmentService->getNCShipment('', '', ['handler' => $handler]);
-        $receipt = $this->shipmentService->getNCShipment('', '', ['handler' => $handler]);
+        $shipment = $this->shipmentService->getNCShipment('0123456789', '', ['handler' => $handler]);
+        $details = $this->shipmentService->getNCShipment('0123456789', '', ['handler' => $handler]);
+        $receipt = $this->shipmentService->getNCShipment('0123456789', '', ['handler' => $handler]);
 
         $this->checkShippingResponse($shipment);
         $this->checkShippingDetails($details);
@@ -143,7 +148,8 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
      * @covers NCShipment::requestNCShipmentRefund()
      * @test
      */
-    public function requestNCShipmentRefund() {
+    public function requestNCShipmentRefund()
+    {
         $body = file_get_contents(__DIR__
             . '/../Mocks/ncshipment-refund-request-info.xml');
         $mock = new MockHandler([
@@ -247,7 +253,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('false', $parcel['mailing-tube']);
 
         // Preferences.
-        $this->assertEquals('true',  $delivery_spec['preferences']['show-packing-instructions']);
+        $this->assertEquals('true', $delivery_spec['preferences']['show-packing-instructions']);
         $this->assertEquals('false', $delivery_spec['preferences']['show-postage-rate']);
         $this->assertEquals('false', $delivery_spec['preferences']['show-insured-value']);
     }
@@ -296,6 +302,34 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
 
         // Check service standard.
         $this->assertTrue(is_array($receipt['service-standard']));
+    }
+
+    protected function mockAddress()
+    {
+        return [
+            'name' => 'John Smith',
+            'company' => 'ACME',
+            'address-details' => [
+                'address-line-1' => '123 Main St',
+                'city' => 'Ottawa',
+                'prov-state' => 'ON',
+                'country-code' => 'CA',
+                'postal_code' => 'K1A0B1',
+            ],
+        ];
+    }
+
+    protected function mockParcel()
+    {
+        return [
+            'weight' => '15.00',
+            'dimensions' => [
+                'length' => '1',
+                'height' => '1',
+                'width' => '1'
+            ],
+            'service_code' => 'DOM.EP'
+        ];
     }
 
 }

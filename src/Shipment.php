@@ -4,7 +4,7 @@ namespace CanadaPost;
 
 use LSS\Array2XML;
 
-class NCShipment extends ClientBase
+class Shipment extends ClientBase
 {
 
     /**
@@ -61,7 +61,7 @@ class NCShipment extends ClientBase
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function createNCShipment(
+    public function createShipment(
         $customerNumber,
         array $sender,
         array $destination,
@@ -73,14 +73,14 @@ class NCShipment extends ClientBase
         $xml = Array2XML::createXML('non-contract-shipment', $content);
         $envelope = $xml->documentElement;
         $envelope->setAttribute('xmlns',
-            'http://www.canadapost.ca/ws/ncshipment-v4');
+            'http://www.canadapost.ca/ws/shipment-v8');
         $payload = $xml->saveXML();
 
         $response = $this->post(
             "rs/{$customerNumber}/ncshipment",
             [
-                'Accept' => 'application/vnd.cpc.ncshipment-v4+xml',
-                'Content-Type' => 'application/vnd.cpc.ncshipment-v4+xml',
+                'Accept' => 'application/vnd.cpc.shipment-v8+xml',
+                'Content-Type' => 'application/vnd.cpc.shipment-v8+xml',
             ],
             $payload,
             $options
@@ -112,7 +112,7 @@ class NCShipment extends ClientBase
     }
 
     /**
-     * Get NCShipment from Canada Post.
+     * Get Shipment from Canada Post.
      * @param string $shipment_id
      *   The shipment id
      * @param string $extra
@@ -123,11 +123,11 @@ class NCShipment extends ClientBase
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getNCShipment($shipment_id, $extra = '', array $options = [])
+    public function getShipment($shipment_id, $extra = '', array $options = [])
     {
         $response = $this->get(
             "rs/{$this->config['customer_number']}/ncshipment/{$shipment_id}/{$extra}",
-            ['Accept' => 'application/vnd.cpc.ncshipment-v4+xml'],
+            ['Accept' => 'application/vnd.cpc.shipment-v8+xml'],
             $options
         );
         return $response;
@@ -135,7 +135,7 @@ class NCShipment extends ClientBase
     }
 
     /**
-     * Get NCShipments from Canada Post within the specified range.
+     * Get Shipments from Canada Post within the specified range.
      *
      * @param string $from
      *   The beginning range. YmdHs format, eg. 201808282359.
@@ -150,7 +150,7 @@ class NCShipment extends ClientBase
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
      */
-    public function getNCShipments($from = '', $to = '', $tracking_pin = '', array $options = [])
+    public function getShipments($from, $to = '', $tracking_pin = '', array $options = [])
     {
         if (empty($to)) {
             $to = date('YmdHs');
@@ -163,14 +163,14 @@ class NCShipment extends ClientBase
 
         $response = $this->get(
             "rs/{$this->config['customer_number']}/ncshipment?" . $query_params,
-            ['Accept' => 'application/vnd.cpc.ncshipment-v4+xml'],
+            ['Accept' => 'application/vnd.cpc.shipment-v8+xml'],
             $options
         );
         return $response;
 
     }
 
-    public function requestNCShipmentRefund($shipment_id, $email, $options) {
+    public function requestShipmentRefund($shipment_id, $email, $options) {
         $content = [
             'email' => $email
         ];
@@ -178,13 +178,13 @@ class NCShipment extends ClientBase
         $xml = Array2XML::createXML('non-contract-shipment-refund-request', $content);
         $envelope = $xml->documentElement;
         $envelope->setAttribute('xmlns',
-            'http://www.canadapost.ca/ws/ncshipment-v4');
+            'http://www.canadapost.ca/ws/shipment-v8');
         $payload = $xml->saveXML();
         $response = $this->post(
             "rs/{$this->config['customer_number']}/ncshipment/{$shipment_id}/refund",
             [
-                'Content-Type' => 'application/vnd.cpc.ncshipment-v4+xml',
-                'Accept' => 'application/vnd.cpc.ncshipment-v4+xml',
+                'Content-Type' => 'application/vnd.cpc.shipment-v8+xml',
+                'Accept' => 'application/vnd.cpc.shipment-v8+xml',
             ],
             $payload,
             $options
@@ -216,7 +216,7 @@ class NCShipment extends ClientBase
         $this->verifyPostalCode($sender);
         $this->verifyPostalCode($destination);
         $shipment_info = [
-            'requested-shipping-point' => $destination['postal-zip-code'],
+            'requested-shipping-point' => $destination['postal_code'],
             'delivery-spec' => [
                 'service-code' => $parcel['service_code'],
                 'sender' => $sender,
