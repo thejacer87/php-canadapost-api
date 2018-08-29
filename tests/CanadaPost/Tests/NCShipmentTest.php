@@ -45,7 +45,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     public function createNCShipment()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/shipment-response-success.xml');
+            . '/../Mocks/ncshipment-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -85,11 +85,11 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     public function getNCShipment()
     {
         $getShipmentBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-response-success.xml');
+            . '/../Mocks/ncshipment-response-success.xml');
         $getDetailsBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-details-success.xml');
+            . '/../Mocks/ncshipment-details-success.xml');
         $getReceiptBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-receipt-success.xml');
+            . '/../Mocks/ncshipment-receipt-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $getShipmentBody),
             new Response(200, [], $getDetailsBody),
@@ -114,7 +114,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     public function getNCShipments()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/shipments-response-success.xml');
+            . '/../Mocks/ncshipments-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -145,7 +145,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
      */
     public function requestNCShipmentRefund() {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/refund-request-info.xml');
+            . '/../Mocks/ncshipment-refund-request-info.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
