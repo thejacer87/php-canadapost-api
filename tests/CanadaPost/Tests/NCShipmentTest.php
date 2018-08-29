@@ -182,7 +182,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($details['non-contract-shipment-details']));
 
         $shipment = $details['non-contract-shipment-details'];
-        $this->assertEquals('J4W4T0', $shipment['final']);
+        $this->assertEquals('J4W4T0', $shipment['final-shipping-point']);
         $this->assertEquals('11111118901234', $shipment['tracking-pin']);
 
         $delivery_spec = $shipment['delivery-spec'];
@@ -237,7 +237,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
 
         $receipt = $response['non-contract-shipment-receipt'];
 
-        $this->assertEquals('J4W4T0', $receipt['final']);
+        $this->assertEquals('J4W4T0', $receipt['final-shipping-point']);
         $this->assertEquals('BP BROSSARD', $receipt['shipping-point-name']);
         $this->assertEquals('0192', $receipt['shipping-point-id']);
         $this->assertEquals('0001111111', $receipt['mailed-by-customer']);
@@ -264,13 +264,13 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($cc_receipt));
         $this->assertEquals('Canada Post Corporation', $cc_receipt['merchant-name']);
         $this->assertEquals('www.canadapost.ca', $cc_receipt['merchant-url']);
-        $this->assertEquals('name-on-card', $cc_receipt['John Doe']);
-        $this->assertEquals('auth-code', $cc_receipt['076838']);
-        $this->assertEquals('auth-timestamp', $cc_receipt['2012-03-13T08:27:20-05:00']);
-        $this->assertEquals('card-type', $cc_receipt['VIS']);
-        $this->assertEquals('charge-amount', $cc_receipt['21.99']);
-        $this->assertEquals('currency', $cc_receipt['CAD']);
-        $this->assertEquals('transaction-type', $cc_receipt['Sale']);
+        $this->assertEquals('John Doe', $cc_receipt['name-on-card']);
+        $this->assertEquals('076838', $cc_receipt['auth-code']);
+        $this->assertEquals('2012-03-13T08:27:20-05:00', $cc_receipt['auth-timestamp']);
+        $this->assertEquals('VIS', $cc_receipt['card-type']);
+        $this->assertEquals('21.99', $cc_receipt['charge-amount']);
+        $this->assertEquals('CAD', $cc_receipt['currency']);
+        $this->assertEquals('Sale', $cc_receipt['transaction-type']);
 
         // Check service standard.
         $this->assertTrue(is_array($receipt['service-standard']));
