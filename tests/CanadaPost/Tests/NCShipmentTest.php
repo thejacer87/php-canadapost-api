@@ -137,6 +137,29 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
             $links[2]['@attributes']['href']);
     }
 
+    /**
+     * Test the POST request to refund a shipment Canada Post.
+     *
+     * @covers NCShipment::requestNCShipmentRefund()
+     * @test
+     */
+    public function requestNCShipmentRefund() {
+        $body = file_get_contents(__DIR__
+            . '/../Mocks/refund-request-info.xml');
+        $mock = new MockHandler([
+            new Response(200, [], $body),
+        ]);
+        $handler = HandlerStack::create($mock);
+        $refund = $this->shipmentService->requestNCShipmentRefund('', '', ['handler' => $handler]);
+
+        // Check response.
+        $this->assertTrue(is_array($refund['non-contract-shipment-refund-request-info']));
+
+        $this->assertEquals('2018-08-28', $refund['non-contract-shipment-refund-request-info']['service-ticket-date']);
+        $this->assertEquals('GT12345678RT', $refund['non-contract-shipment-refund-request-info']['service-ticket-id']);
+
+    }
+
     protected function checkShippingResponse($shipment)
     {
         // Check response.
@@ -228,7 +251,6 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('false', $delivery_spec['preferences']['show-postage-rate']);
         $this->assertEquals('false', $delivery_spec['preferences']['show-insured-value']);
     }
-
 
     protected function checkShippingReceipt($response)
     {

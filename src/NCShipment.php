@@ -170,6 +170,28 @@ class NCShipment extends ClientBase
 
     }
 
+    public function requestNCShipmentRefund($shipment_id, $email, $options) {
+        $content = [
+            'email' => $email
+        ];
+
+        $xml = Array2XML::createXML('non-contract-shipment-refund-request', $content);
+        $envelope = $xml->documentElement;
+        $envelope->setAttribute('xmlns',
+            'http://www.canadapost.ca/ws/ncshipment-v4');
+        $payload = $xml->saveXML();
+        $response = $this->post(
+            "rs/{$this->config['customer_number']}/ncshipment/{$shipment_id}/refund",
+            [
+                'Content-Type' => 'application/vnd.cpc.ncshipment-v4+xml',
+                'Accept' => 'application/vnd.cpc.ncshipment-v4+xml',
+            ],
+            $payload,
+            $options
+        );
+        return $response;
+    }
+
     /**
      * Helper function to build the content array.
      *
