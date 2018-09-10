@@ -61,6 +61,13 @@ abstract class ClientBase
     protected $customerNumber;
 
     /**
+     * The Canada Post API contract ID.
+     *
+     * @var array
+     */
+    protected $contractId;
+
+    /**
      * ClientBase constructor.
      *
      * @param array $config
@@ -127,35 +134,6 @@ abstract class ClientBase
     }
 
     /**
-     * Send the GET request to the Canada Post API.
-     *
-     * @param string $endpoint
-     *   The endpoint to send the request.
-     * @param string $fileType
-     *   The file type of the file to retrieve.
-     * @param array $options
-     *   An array of options. Supported options are all request options
-     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
-     * plus the following:
-     *     - handler: Don't use unless you have a valid reason or for unit
-     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
-     *
-     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getFile($endpoint, $fileType, array $options = [])
-    {
-        return $this->get(
-            $endpoint,
-            [
-                'Accept' => 'application/' . $fileType,
-                'Accept-Language' => 'en-CA'
-            ],
-            $options
-        );
-    }
-
-    /**
      * Send the POST request to the Canada Post API.
      *
      * @param string $endpoint
@@ -204,6 +182,57 @@ abstract class ClientBase
     }
 
     /**
+     * Send the GET request to the Canada Post API.
+     *
+     * @param string $endpoint
+     *   The endpoint to send the request.
+     * @param string $fileType
+     *   The file type of the file to retrieve.
+     * @param array $options
+     *   An array of options. Supported options are all request options
+     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
+     * plus the following:
+     *     - handler: Don't use unless you have a valid reason or for unit
+     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
+     *
+     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getFile($endpoint, $fileType, array $options = [])
+    {
+        return $this->get(
+            $endpoint,
+            [
+                'Accept' => 'application/' . $fileType,
+                'Accept-Language' => 'en-CA'
+            ],
+            $options
+        );
+    }
+
+    /**
+     * Get an artifact from Canada Post server.
+     * @param string $endpoint
+     *   The endpoint of the file to retrieve from the Canada Post server.
+     * @param array $options
+     *   The options array.
+     *
+     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getArtifact($endpoint, array $options = [])
+    {
+        $response = $this->getFile(
+            $endpoint,
+            'pdf',
+            $options + [
+                'raw_response' => true
+            ]
+        );
+        return $response;
+    }
+
+    /**
      * Set the API configuration array for the Client.
      *
      * @param array $config
@@ -219,6 +248,7 @@ abstract class ClientBase
         $this->username = $config['username'];
         $this->password = $config['password'];
         $this->customerNumber = $config['customer_number'];
+        $this->contractId = $config['contract_id'];
     }
 
     /**

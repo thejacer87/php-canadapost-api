@@ -9,9 +9,9 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit_Framework_TestCase;
 
 /**
- * Rating Class Tests.
+ * NCShipment Class Tests.
  *
- * @group Shipment
+ * @group NCShipment
  */
 class NCShipmentTest extends PHPUnit_Framework_TestCase
 {
@@ -51,7 +51,6 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
         ]);
         $handler = HandlerStack::create($mock);
         $shipment = $this->shipmentService->createNCShipment(
-            '123456789012',
             $this->mockAddress(),
             $this->mockAddress(),
             $this->mockParcel(),
@@ -60,27 +59,6 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
 
         $this->checkShippingResponse($shipment);
     }
-
-    /**
-     * Test the GET request to retrieve an artifact from Canada Post.
-     *
-     * @covers NCShipment::getArtifact()
-     * @test
-     */
-    public function getArtifact()
-    {
-        $body = file_get_contents(__DIR__
-            . '/../Mocks/canadapost.pdf');
-        $mock = new MockHandler([
-            new Response(200, [], $body),
-        ]);
-        $handler = HandlerStack::create($mock);
-        $response = $this->shipmentService->getArtifact('http://test.com', ['handler' => $handler]);
-
-        // Compares the pdfs.
-        $this->assertEquals(0, strcmp($body, $response->getContents()));
-    }
-
     /**
      * Test the GET request to retrieve an artifact from Canada Post.
      *

@@ -10,8 +10,6 @@ class NCShipment extends ClientBase
     /**
      * Create the shipment.
      *
-     * @param string $customerNumber
-     *   The customer number.
      * @param array $sender
      *   The sender info.
      *   <code>
@@ -62,7 +60,6 @@ class NCShipment extends ClientBase
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function createNCShipment(
-        $customerNumber,
         array $sender,
         array $destination,
         array $parcel,
@@ -77,36 +74,13 @@ class NCShipment extends ClientBase
         $payload = $xml->saveXML();
 
         $response = $this->post(
-            "rs/{$customerNumber}/ncshipment",
+            "rs/{$this->customerNumber}/ncshipment",
             [
                 'Accept' => 'application/vnd.cpc.ncshipment-v4+xml',
                 'Content-Type' => 'application/vnd.cpc.ncshipment-v4+xml',
             ],
             $payload,
             $options
-        );
-        return $response;
-    }
-
-    /**
-     * Get an artifact from Canada Post server.
-     * @param string $url
-     *   The url of the file to retrieve from the Canada Post server.
-     * @param array $options
-     *   The options array.
-     *
-     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getArtifact($url, array $options = [])
-    {
-        $url = str_replace('https://ct.soa-gw.canadapost.ca/', '', $url);
-        $response = $this->getFile(
-            $url,
-            'pdf',
-            $options + [
-                'raw_response' => true
-            ]
         );
         return $response;
     }
