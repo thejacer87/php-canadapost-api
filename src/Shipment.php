@@ -208,7 +208,7 @@ class Shipment extends ClientBase
             'group-ids' => [
                 'group-id' => $group_ids
             ],
-            'requested-shipping-point' => $manifest_address['postal-zip-code'],
+            'requested-shipping-point' => $manifest_address['address-details']['postal-zip-code'],
             'cpc-pickup-indicator' => true,
             'detailed-manifests' => true,
             'manifest-address' => $manifest_address,
@@ -325,7 +325,7 @@ class Shipment extends ClientBase
         $this->verifyPostalCode($sender);
         $this->verifyPostalCode($destination);
         $shipment_info = [
-            'requested-shipping-point' => $destination['postal-zip-code'],
+            'requested-shipping-point' => $destination['address-details']['postal-zip-code'],
             'cpc-pickup-indicator' => true,
             'delivery-spec' => [
                 'service-code' => $parcel['service_code'],
