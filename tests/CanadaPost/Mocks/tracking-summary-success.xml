@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tracking-summary>
+    <pin-summary>
+        <pin>1681334332936901</pin>
+        <origin-postal-id>S6V</origin-postal-id>
+        <destination-postal-id></destination-postal-id>
+        <destination-province></destination-province>
+        <service-name></service-name>
+        <mailed-on-date>2010-01-05</mailed-on-date>
+        <expected-delivery-date></expected-delivery-date>
+        <actual-delivery-date>2010-01-06</actual-delivery-date>
+        <delivery-option-completed-ind>2</delivery-option-completed-ind>
+        <event-date-time>20100106:084923</event-date-time>
+        <event-description>Paiement CR - SPL</event-description>
+        <attempted-date>2010-01-06</attempted-date>
+        <customer-ref-1></customer-ref-1>
+        <customer-ref-2></customer-ref-2>
+        <return-pin></return-pin>
+        <event-type>OUT</event-type>
+        <event-location></event-location>
+        <signatory-name></signatory-name>
+    </pin-summary>
+</tracking-summary>
