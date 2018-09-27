@@ -40,7 +40,7 @@ class NCShipmentTest extends CanadaPostTestBase
     public function createNCShipment()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-response-success.xml');
+            . '/Mocks/ncshipment-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -63,11 +63,11 @@ class NCShipmentTest extends CanadaPostTestBase
     public function getNCShipment()
     {
         $getShipmentBody = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-response-success.xml');
+            . '/Mocks/ncshipment-response-success.xml');
         $getDetailsBody = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-details-success.xml');
+            . '/Mocks/ncshipment-details-success.xml');
         $getReceiptBody = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-receipt-success.xml');
+            . '/Mocks/ncshipment-receipt-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $getShipmentBody),
             new Response(200, [], $getDetailsBody),
@@ -92,7 +92,7 @@ class NCShipmentTest extends CanadaPostTestBase
     public function getNCShipments()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipments-response-success.xml');
+            . '/Mocks/ncshipments-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -124,7 +124,7 @@ class NCShipmentTest extends CanadaPostTestBase
     public function requestNCShipmentRefund()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-refund-request-info.xml');
+            . '/Mocks/ncshipment-refund-request-info.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);

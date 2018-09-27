@@ -40,7 +40,7 @@ class ReturnsTest extends CanadaPostTestBase
     public function createAuthorizedReturn()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/authreturn-response-success.xml');
+            . '/Mocks/authreturn-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -74,7 +74,7 @@ class ReturnsTest extends CanadaPostTestBase
     public function createOpenReturn()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/openreturn-response-success.xml');
+            . '/Mocks/openreturn-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -119,7 +119,7 @@ class ReturnsTest extends CanadaPostTestBase
     public function getOpenReturn()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/openreturn-response-success.xml');
+            . '/Mocks/openreturn-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -161,7 +161,7 @@ class ReturnsTest extends CanadaPostTestBase
     public function getOpenReturnDetails()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/openreturn-details-success.xml');
+            . '/Mocks/openreturn-details-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -202,7 +202,7 @@ class ReturnsTest extends CanadaPostTestBase
     public function getNextOpenReturnArtifact()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/canadapost.pdf');
+            . '/Mocks/canadapost.pdf');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);

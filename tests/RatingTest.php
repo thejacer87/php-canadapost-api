@@ -37,7 +37,8 @@ class RatingTest extends CanadaPostTestBase
      */
     public function getRates()
     {
-        $body = file_get_contents(__DIR__ . '/../Mocks/rating-response-success.xml');
+        $body = file_get_contents(__DIR__
+            . '/Mocks/rating-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);

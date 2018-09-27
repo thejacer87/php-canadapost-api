@@ -40,7 +40,7 @@ class ShipmentTest extends CanadaPostTestBase
     public function createShipment()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/shipment-response-success.xml');
+            . '/Mocks/shipment-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -64,11 +64,11 @@ class ShipmentTest extends CanadaPostTestBase
     public function getShipment()
     {
         $getShipmentBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-response-success.xml');
+            . '/Mocks/shipment-response-success.xml');
         $getDetailsBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-details-success.xml');
+            . '/Mocks/shipment-details-success.xml');
         $getReceiptBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-receipt-success.xml');
+            . '/Mocks/shipment-receipt-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $getShipmentBody),
             new Response(200, [], $getDetailsBody),
@@ -93,7 +93,7 @@ class ShipmentTest extends CanadaPostTestBase
     public function getShipments()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipments-response-success.xml');
+            . '/Mocks/ncshipments-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -125,7 +125,7 @@ class ShipmentTest extends CanadaPostTestBase
     public function requestShipmentRefund()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-refund-request-info.xml');
+            . '/Mocks/ncshipment-refund-request-info.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -149,7 +149,7 @@ class ShipmentTest extends CanadaPostTestBase
     public function getArtifact()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/canadapost.pdf');
+            . '/Mocks/canadapost.pdf');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
