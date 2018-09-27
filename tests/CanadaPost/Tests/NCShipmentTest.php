@@ -2,18 +2,19 @@
 
 namespace CanadaPost\Tests;
 
+include ('CanadaPostTestBase.php');
+
 use CanadaPost\NCShipment;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
 
 /**
  * NCShipment Class Tests.
  *
  * @group NCShipment
  */
-class NCShipmentTest extends PHPUnit_Framework_TestCase
+class NCShipmentTest extends CanadaPostTestBase
 {
 
     /**
@@ -28,12 +29,8 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = [
-            'username' => 'username',
-            'password' => 'password',
-            'customer_number' => 'customer_number',
-        ];
-        $this->shipmentService = new NCShipment($config);
+        parent::setUp();
+        $this->shipmentService = new NCShipment($this->config);
     }
 
     /**
@@ -280,34 +277,6 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
 
         // Check service standard.
         $this->assertTrue(is_array($receipt['service-standard']));
-    }
-
-    protected function mockAddress()
-    {
-        return [
-            'name' => 'John Smith',
-            'company' => 'ACME',
-            'address-details' => [
-                'address-line-1' => '123 Main St',
-                'city' => 'Ottawa',
-                'prov-state' => 'ON',
-                'country-code' => 'CA',
-                'postal-zip-code' => 'K1A0B1',
-            ],
-        ];
-    }
-
-    protected function mockParcel()
-    {
-        return [
-            'weight' => '15.00',
-            'dimensions' => [
-                'length' => '1',
-                'height' => '1',
-                'width' => '1'
-            ],
-            'service_code' => 'DOM.EP'
-        ];
     }
 
 }

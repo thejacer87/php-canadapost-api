@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<authorized-return-info>
+    <tracking-pin>12345678901234</tracking-pin>
+    <links>
+        <link
+                href="https://ct.soa-gw.canadapost.ca/ers/artifact/76108cb5192002d5/21238/0"
+                rel="returnLabel"
+                media-type="application/pdf"
+                index="0">
+        </link>
+    </links>
+</authorized-return-info>

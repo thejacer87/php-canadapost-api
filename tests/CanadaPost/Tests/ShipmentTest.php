@@ -2,18 +2,19 @@
 
 namespace CanadaPost\Tests;
 
+include ('CanadaPostTestBase.php');
+
 use CanadaPost\Shipment;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Shipment Class Tests.
  *
  * @group Shipment
  */
-class ShipmentTest extends PHPUnit_Framework_TestCase
+class ShipmentTest extends CanadaPostTestBase
 {
 
     /**
@@ -28,13 +29,8 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = [
-            'username' => 'username',
-            'password' => 'password',
-            'customer_number' => 'customer_number',
-            'contract_id' => 'contract_id',
-        ];
-        $this->shipmentService = new Shipment($config);
+        parent::setUp();
+        $this->shipmentService = new Shipment($this->config);
     }
 
     /**
@@ -288,34 +284,6 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('CAD', $cc_receipt_details['currency']);
         $this->assertEquals('Sale', $cc_receipt_details['transaction-type']);
 
-    }
-
-    protected function mockAddress()
-    {
-        return [
-            'name' => 'John Smith',
-            'company' => 'ACME',
-            'address-details' => [
-                'address-line-1' => '123 Main St',
-                'city' => 'Ottawa',
-                'prov-state' => 'ON',
-                'country-code' => 'CA',
-                'postal-zip-code' => 'K1A0B1',
-            ],
-        ];
-    }
-
-    protected function mockParcel()
-    {
-        return [
-            'weight' => '15.00',
-            'dimensions' => [
-                'length' => '1',
-                'height' => '1',
-                'width' => '1'
-            ],
-            'service_code' => 'DOM.EP'
-        ];
     }
 
 }

@@ -2,17 +2,18 @@
 
 namespace CanadaPost\Tests;
 
+include ('CanadaPostTestBase.php');
+
 use CanadaPost\Rating;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Rating Class Tests.
  * @group Rating
  */
-class RatingTest extends PHPUnit_Framework_TestCase
+class RatingTest extends CanadaPostTestBase
 {
 
     /**
@@ -27,12 +28,8 @@ class RatingTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = [
-            'username' => 'username',
-            'password' => 'password',
-            'customer_number' => 'customer_number',
-        ];
-        $this->ratingService = new Rating($config);
+        parent::setUp();
+        $this->ratingService = new Rating($this->config);
     }
 
     /**
