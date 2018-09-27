@@ -40,7 +40,7 @@ abstract class CanadaPostTestBase extends PHPUnit_Framework_TestCase
                 'city' => 'Ottawa',
                 'prov-state' => 'ON',
                 'country-code' => 'CA',
-                'postal_code' => 'K1A0B1',
+                'postal-zip-code' => 'K1A0B1',
             ],
         ];
     }
