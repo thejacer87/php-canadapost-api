@@ -2,8 +2,6 @@
 
 namespace CanadaPost\Tests;
 
-include ('CanadaPostTestBase.php');
-
 use CanadaPost\NCShipment;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
