@@ -213,4 +213,18 @@ class ReturnsTest extends CanadaPostTestBase
         // Compares the pdfs.
         $this->assertEquals(0, strcmp($body, $response->getContents()));
     }
+
+    protected function mockAddress()
+    {
+        return [
+            'name' => 'John Smith',
+            'company' => 'ACME',
+            'domestic-address' => [
+                'address-line-1' => '123 Main St',
+                'city' => 'Ottawa',
+                'province' => 'ON',
+                'postal-code' => 'K1A0B1',
+            ],
+        ];
+    }
 }

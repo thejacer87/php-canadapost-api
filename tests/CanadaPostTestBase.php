@@ -35,11 +35,12 @@ abstract class CanadaPostTestBase extends PHPUnit_Framework_TestCase
         return [
             'name' => 'John Smith',
             'company' => 'ACME',
-            'domestic-address' => [
+            'address-details' => [
                 'address-line-1' => '123 Main St',
                 'city' => 'Ottawa',
-                'province' => 'ON',
-                'postal-code' => 'K1A0B1',
+                'prov-state' => 'ON',
+                'country-code' => 'CA',
+                'postal_code' => 'K1A0B1',
             ],
         ];
     }
