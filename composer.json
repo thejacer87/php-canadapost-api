@@ -24,6 +24,11 @@
           "CanadaPost\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+          "CanadaPost\\Tests\\": "tests/"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
