@@ -6,14 +6,13 @@ use CanadaPost\NCShipment;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
 
 /**
  * NCShipment Class Tests.
  *
  * @group NCShipment
  */
-class NCShipmentTest extends PHPUnit_Framework_TestCase
+class NCShipmentTest extends CanadaPostTestBase
 {
 
     /**
@@ -28,12 +27,8 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = [
-            'username' => 'username',
-            'password' => 'password',
-            'customer_number' => 'customer_number',
-        ];
-        $this->shipmentService = new NCShipment($config);
+        parent::setUp();
+        $this->shipmentService = new NCShipment($this->config);
     }
 
     /**
@@ -45,7 +40,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     public function createNCShipment()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-response-success.xml');
+            . '/Mocks/ncshipment-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -68,11 +63,11 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     public function getNCShipment()
     {
         $getShipmentBody = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-response-success.xml');
+            . '/Mocks/ncshipment-response-success.xml');
         $getDetailsBody = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-details-success.xml');
+            . '/Mocks/ncshipment-details-success.xml');
         $getReceiptBody = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-receipt-success.xml');
+            . '/Mocks/ncshipment-receipt-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $getShipmentBody),
             new Response(200, [], $getDetailsBody),
@@ -97,7 +92,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     public function getNCShipments()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipments-response-success.xml');
+            . '/Mocks/ncshipments-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -129,7 +124,7 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
     public function requestNCShipmentRefund()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-refund-request-info.xml');
+            . '/Mocks/ncshipment-refund-request-info.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -280,34 +275,6 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
 
         // Check service standard.
         $this->assertTrue(is_array($receipt['service-standard']));
-    }
-
-    protected function mockAddress()
-    {
-        return [
-            'name' => 'John Smith',
-            'company' => 'ACME',
-            'address-details' => [
-                'address-line-1' => '123 Main St',
-                'city' => 'Ottawa',
-                'prov-state' => 'ON',
-                'country-code' => 'CA',
-                'postal-zip-code' => 'K1A0B1',
-            ],
-        ];
-    }
-
-    protected function mockParcel()
-    {
-        return [
-            'weight' => '15.00',
-            'dimensions' => [
-                'length' => '1',
-                'height' => '1',
-                'width' => '1'
-            ],
-            'service_code' => 'DOM.EP'
-        ];
     }
 
 }

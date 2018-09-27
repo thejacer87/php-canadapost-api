@@ -186,6 +186,53 @@ abstract class ClientBase
         return $this->parseResponse($response);
     }
 
+
+    /**
+     * Send the DELETE request to the Canada Post API.
+     *
+     * @param string $endpoint
+     *   The endpoint to send the request.
+     * @param array $headers
+     *   The HTTP headers array.
+     * @param array $options
+     *   An array of options. Supported options are all request options
+     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
+     * plus the following:
+     *     - handler: Don't use unless you have a valid reason or for unit
+     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
+     *
+     * @return \DOMDocument|\Psr\Http\Message\StreamInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function delete($endpoint, array $headers = [], array $options = [])
+    {
+
+        $url = $this->baseUrl . '/' . $endpoint;
+
+        try {
+            $client = $this->buildClient($options);
+            $options += [
+                'auth' => [$this->username, $this->password],
+                'headers' => $headers,
+            ];
+
+            $response = $client->request('DELETE', $url, $options);
+        } catch (GuzzleClientException $exception) {
+            $response = $exception->getResponse();
+
+            throw new ClientException(
+                $exception->getMessage(),
+                $this->parseResponse($response),
+                $exception->getRequest(),
+                $response,
+                $exception->getPrevious(),
+                $exception->getHandlerContext()
+            );
+        }
+        return $this->parseResponse($response);
+
+    }
+
     /**
      * Send the GET request to the Canada Post API.
      *

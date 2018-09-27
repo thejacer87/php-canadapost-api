@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<open-return-details>
+    <artifacts-remaining>10</artifacts-remaining>
+    <open-return>
+        <max-number-of-artifacts>10</max-number-of-artifacts>
+        <service-code>DOM.EP</service-code>
+        <receiver>
+            <domestic-address>
+                <address-line-1>23 jardin private</address-line-1>
+                <city>Ottawa</city>
+                <province>ON</province>
+                <postal-code>K1K4T3</postal-code>
+            </domestic-address>
+        </receiver>
+        <print-preferences>
+            <output-format>8.5x11</output-format>
+            <encoding>PDF</encoding>
+            <show-packing-instructions>false</show-packing-instructions>
+        </print-preferences>
+        <settlement-info>
+            <contract-id>0012345678</contract-id>
+        </settlement-info>
+    </open-return>
+</open-return-details>

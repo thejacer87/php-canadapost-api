@@ -6,14 +6,13 @@ use CanadaPost\Shipment;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Shipment Class Tests.
  *
  * @group Shipment
  */
-class ShipmentTest extends PHPUnit_Framework_TestCase
+class ShipmentTest extends CanadaPostTestBase
 {
 
     /**
@@ -28,13 +27,8 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = [
-            'username' => 'username',
-            'password' => 'password',
-            'customer_number' => 'customer_number',
-            'contract_id' => 'contract_id',
-        ];
-        $this->shipmentService = new Shipment($config);
+        parent::setUp();
+        $this->shipmentService = new Shipment($this->config);
     }
 
     /**
@@ -46,7 +40,7 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
     public function createShipment()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/shipment-response-success.xml');
+            . '/Mocks/shipment-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -70,11 +64,11 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
     public function getShipment()
     {
         $getShipmentBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-response-success.xml');
+            . '/Mocks/shipment-response-success.xml');
         $getDetailsBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-details-success.xml');
+            . '/Mocks/shipment-details-success.xml');
         $getReceiptBody = file_get_contents(__DIR__
-            . '/../Mocks/shipment-receipt-success.xml');
+            . '/Mocks/shipment-receipt-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $getShipmentBody),
             new Response(200, [], $getDetailsBody),
@@ -99,7 +93,7 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
     public function getShipments()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipments-response-success.xml');
+            . '/Mocks/ncshipments-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -131,7 +125,7 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
     public function requestShipmentRefund()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/ncshipment-refund-request-info.xml');
+            . '/Mocks/ncshipment-refund-request-info.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -155,7 +149,7 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
     public function getArtifact()
     {
         $body = file_get_contents(__DIR__
-            . '/../Mocks/canadapost.pdf');
+            . '/Mocks/canadapost.pdf');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -288,34 +282,6 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('CAD', $cc_receipt_details['currency']);
         $this->assertEquals('Sale', $cc_receipt_details['transaction-type']);
 
-    }
-
-    protected function mockAddress()
-    {
-        return [
-            'name' => 'John Smith',
-            'company' => 'ACME',
-            'address-details' => [
-                'address-line-1' => '123 Main St',
-                'city' => 'Ottawa',
-                'prov-state' => 'ON',
-                'country-code' => 'CA',
-                'postal-zip-code' => 'K1A0B1',
-            ],
-        ];
-    }
-
-    protected function mockParcel()
-    {
-        return [
-            'weight' => '15.00',
-            'dimensions' => [
-                'length' => '1',
-                'height' => '1',
-                'width' => '1'
-            ],
-            'service_code' => 'DOM.EP'
-        ];
     }
 
 }
