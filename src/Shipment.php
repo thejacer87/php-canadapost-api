@@ -116,8 +116,6 @@ class Shipment extends ClientBase
      *   The beginning range. YmdH format, eg. 20180828.
      * @param int $limit
      *   The maximum number of shipment links to include in response.
-     * @param string $tracking_pin
-     *   The Tracking PIN of the shipment to retrieve.
      * @param array $options
      *   The options array.
      *
@@ -125,13 +123,9 @@ class Shipment extends ClientBase
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/shipments.jsf
      */
-    public function getShipments($date, $limit = 100, $tracking_pin = '', array $options = [])
+    public function getShipments($date, $limit = 100, array $options = [])
     {
         $query_params = "noManifest=true&date={$date}&limit{$limit}";
-
-        if (!empty($tracking_pin)) {
-            $query_params = "trackingPIN={$tracking_pin}";
-        }
 
         $response = $this->get(
             "rs/{$this->config['customer_number']}/{$this->config['customer_number']}/shipment?{$query_params}",
