@@ -53,13 +53,47 @@ class Tracking extends ClientBase
         return $response;
     }
 
-    public function getSignatureImage()
+    /**
+     * Get the image of the signature provided for a specific parcel.
+     *
+     * @param string $pin
+     *   The tracking pin.
+     * @param array $options
+     *   The options to pass along to the Guzzle Client.
+     *
+     * @return \DOMDocument
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getSignatureImage($pin, array $options = [])
     {
-
+        $response = $this->getFile(
+            "vis/signatureimage/{$pin}",
+            'vnd.cpc.track+xml',
+            $options
+        );
+        return $response;
     }
 
-    public function getDeliveryConfirmationCertificate()
-    {
-
+    /**
+     * Get the image of the delivery confirmation certificate for a parcel.
+     *
+     * @param string $pin
+     *   The tracking pin.
+     * @param array $options
+     *   The options to pass along to the Guzzle Client.
+     *
+     * @return \DOMDocument
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getDeliveryConfirmationCertificate(
+        $pin,
+        array $options = []
+    ) {
+        $response = $this->getFile(
+            "vis/certificate/{$pin}",
+            'vnd.cpc.track+xml',
+            $options
+        );
+        return $response;
     }
 }

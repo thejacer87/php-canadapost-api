@@ -6,13 +6,12 @@ use CanadaPost\Tracking;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Tracking Class Tests.
  * @group Tracking
  */
-class TrackingTest extends PHPUnit_Framework_TestCase
+class TrackingTest extends CanadaPostTestBase
 {
 
     /**
@@ -27,12 +26,8 @@ class TrackingTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = [
-            'username' => 'username',
-            'password' => 'password',
-            'customer_number' => 'customer_number',
-        ];
-        $this->trackingService = new Tracking($config);
+        parent::setUp();
+        $this->trackingService = new Tracking($this->config);
     }
 
     /**
@@ -41,7 +36,7 @@ class TrackingTest extends PHPUnit_Framework_TestCase
      */
     public function getSummary()
     {
-        $body = file_get_contents(__DIR__ . '/../Mocks/tracking-summary-success.xml');
+        $body = file_get_contents(__DIR__ . '/Mocks/tracking-summary-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -79,7 +74,7 @@ class TrackingTest extends PHPUnit_Framework_TestCase
      */
     public function getDetails()
     {
-        $body = file_get_contents(__DIR__ . '/../Mocks/tracking-details-success.xml');
+        $body = file_get_contents(__DIR__ . '/Mocks/tracking-details-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
