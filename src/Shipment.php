@@ -67,7 +67,7 @@ class Shipment extends ClientBase
     ) {
         $content = $this->buildShipmentArray($sender, $destination, $parcel, $options);
 
-        $xml = Array2XML::createXML('non-contract-shipment', $content);
+        $xml = Array2XML::createXML('shipment', $content);
         $envelope = $xml->documentElement;
         $envelope->setAttribute('xmlns',
             'http://www.canadapost.ca/ws/shipment-v8');
@@ -110,12 +110,12 @@ class Shipment extends ClientBase
     }
 
     /**
-     * Get Shipments from Canada Post within the specified range.
+     * Get Shipments from Canada Post for specific date.
      *
-     * @param string $from
-     *   The beginning range. YmdHs format, eg. 201808282359.
-     * @param string $to
-     *   The end range, defaults to current time. YmdHs format, eg. 201808282359.
+     * @param string $date
+     *   The beginning range. YmdH format, eg. 20180828.
+     * @param int $limit
+     *   The maximum number of shipment links to include in response.
      * @param string $tracking_pin
      *   The Tracking PIN of the shipment to retrieve.
      * @param array $options
@@ -123,22 +123,18 @@ class Shipment extends ClientBase
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/shipments.jsf
      */
-    public function getShipments($from, $to = '', $tracking_pin = '', array $options = [])
+    public function getShipments($date, $limit = 100, $tracking_pin = '', array $options = [])
     {
-        // TODO convert to shipment API
-        if (empty($to)) {
-            $to = date('YmdHs');
-        }
-        $query_params = "from={$from}&to{$to}";
+        $query_params = "noManifest=true&date={$date}&limit{$limit}";
 
         if (!empty($tracking_pin)) {
             $query_params = "trackingPIN={$tracking_pin}";
         }
 
         $response = $this->get(
-            "rs/{$this->config['customer_number']}/{$this->config['customer_number']}/shipment?" . $query_params,
+            "rs/{$this->config['customer_number']}/{$this->config['customer_number']}/shipment?{$query_params}",
             ['Accept' => 'application/vnd.cpc.shipment-v8+xml'],
             $options
         );
@@ -151,7 +147,7 @@ class Shipment extends ClientBase
             'email' => $email
         ];
 
-        $xml = Array2XML::createXML('non-contract-shipment-refund-request', $content);
+        $xml = Array2XML::createXML('shipment-refund-request', $content);
         $envelope = $xml->documentElement;
         $envelope->setAttribute('xmlns',
             'http://www.canadapost.ca/ws/shipment-v8');

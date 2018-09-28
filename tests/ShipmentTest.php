@@ -32,7 +32,7 @@ class ShipmentTest extends CanadaPostTestBase
     }
 
     /**
-     * Test the POST request to create a non-contract shipment from Canada Post.
+     * Test the POST request to create a shipment from Canada Post.
      *
      * @covers Shipment::createShipment()
      * @test
@@ -93,27 +93,25 @@ class ShipmentTest extends CanadaPostTestBase
     public function getShipments()
     {
         $body = file_get_contents(__DIR__
-            . '/Mocks/ncshipments-response-success.xml');
+            . '/Mocks/shipments-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
         $handler = HandlerStack::create($mock);
-        $shipments = $this->shipmentService->getShipments('', '', '', ['handler' => $handler]);
+        $shipments = $this->shipmentService->getShipments('', '', ['handler' => $handler]);
 
         // Check response.
-        $this->assertTrue(is_array($shipments['non-contract-shipments']));
+        $this->assertTrue(is_array($shipments['shipments']));
 
         // Test the shipments.
-        $links = $shipments['non-contract-shipments']['link'];
+        $links = $shipments['shipments']['link'];
 
-        $this->assertEquals('https://ct.soa-gw.canadapost.ca/rs/0007023211/ncshipment/406951321983787234',
+        $this->assertEquals('https://XX/rs/1111111111/222222222/shipment/33333333333',
             $links[0]['@attributes']['href']);
 
-        $this->assertEquals('https://ct.soa-gw.canadapost.ca/rs/0007023211/ncshipment/406951321983787352',
+        $this->assertEquals('https://XX/rs/1111111111/222222222/shipment/44444444',
             $links[1]['@attributes']['href']);
 
-        $this->assertEquals('https://ct.soa-gw.canadapost.ca/rs/0007023211/ncshipment/406951321983787123',
-            $links[2]['@attributes']['href']);
     }
 
     /**
@@ -125,7 +123,7 @@ class ShipmentTest extends CanadaPostTestBase
     public function requestShipmentRefund()
     {
         $body = file_get_contents(__DIR__
-            . '/Mocks/ncshipment-refund-request-info.xml');
+            . '/Mocks/shipment-refund-request-info.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);
@@ -133,10 +131,10 @@ class ShipmentTest extends CanadaPostTestBase
         $refund = $this->shipmentService->requestShipmentRefund('', '', ['handler' => $handler]);
 
         // Check response.
-        $this->assertTrue(is_array($refund['non-contract-shipment-refund-request-info']));
+        $this->assertTrue(is_array($refund['shipment-refund-request-info']));
 
-        $this->assertEquals('2018-08-28', $refund['non-contract-shipment-refund-request-info']['service-ticket-date']);
-        $this->assertEquals('GT12345678RT', $refund['non-contract-shipment-refund-request-info']['service-ticket-id']);
+        $this->assertEquals('2015-01-28', $refund['shipment-refund-request-info']['service-ticket-date']);
+        $this->assertEquals('GT12345678RT', $refund['shipment-refund-request-info']['service-ticket-id']);
 
     }
 

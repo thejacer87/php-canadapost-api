@@ -112,9 +112,9 @@ class NCShipment extends ClientBase
      * Get NCShipments from Canada Post within the specified range.
      *
      * @param string $from
-     *   The beginning range. YmdHs format, eg. 201808282359.
+     *   The beginning range. YmdHs format, eg. '201808282359'.
      * @param string $to
-     *   The end range, defaults to current time. YmdHs format, eg. 201808282359.
+     *   The end range, defaults to current time. YmdHs format, eg. '201808282359'.
      * @param string $tracking_pin
      *   The Tracking PIN of the shipment to retrieve.
      * @param array $options
