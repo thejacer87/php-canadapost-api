@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pickup-request-info>
+    <pickup-request-header>
+        <request-id>0074698052</request-id>
+        <request-status>Active</request-status>
+        <pickup-type>OnDemand</pickup-type>
+        <request-date>2015-01-01</request-date>
+    </pickup-request-header>
+    <pickup-request-price>
+        <pre-tax-amount>3.50</pre-tax-amount>
+        <hst-amount>0.46</hst-amount>
+        <due-amount>3.96</due-amount>
+    </pickup-request-price>
+    <links>
+        <link rel="self" href="https://ct.soa-gw.canadapost.ca/enab/1234567/pickuprequest/0074698052" media-type="application/vnd.cpc.pickuprequest+xml"></link>
+        <link rel="details" href="https://ct.soa-gw.canadapost.ca/enab/1234567/pickuprequest/0074698052/details" media-type="application/vnd.cpc.pickuprequest+xml"></link>
+    </links>
+</pickup-request-info>
