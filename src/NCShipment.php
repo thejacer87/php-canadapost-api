@@ -120,9 +120,9 @@ class NCShipment extends ClientBase
      * @param array $options
      *   The options array.
      *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
      */
     public function getNCShipments($from = '', $to = '', $tracking_pin = '', array $options = [])
     {

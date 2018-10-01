@@ -121,9 +121,9 @@ class Shipment extends ClientBase
      * @param array $options
      *   The options array.
      *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/shipments.jsf
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
      */
     public function getShipments($from, $to = '', $tracking_pin = '', array $options = [])
     {
@@ -273,9 +273,9 @@ class Shipment extends ClientBase
      * @param array $options
      *   The options array.
      *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/manifests.jsf
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/manifests.jsf
      */
     public function getManifests(
         $start,
