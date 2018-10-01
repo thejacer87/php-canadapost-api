@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<post-office-detail>
+    <address>
+        <city>GATINEAU</city>
+        <latitude>45.5856</latitude>
+        <longitude>-75.4132</longitude>
+        <postal-code>J8L1N0</postal-code>
+        <province>QC</province>
+        <office-address>563 RUE BELANGER</office-address>
+    </address>
+    <location>BUCKINGHAM PO</location>
+    <name>DÉPANNEUR MAUZEROLL</name>
+    <office-id>0000319376</office-id>
+    <bilingual-designation>true</bilingual-designation>
+    <hours-list>
+        <day>1</day>
+        <time>08:00</time>
+        <time>00:00</time>
+    </hours-list>
+    <hours-list>
+        <day>2</day>
+        <time>08:00</time>
+        <time>00:00</time>
+    </hours-list>
+    <hours-list>
+        <day>3</day>
+        <time>08:00</time>
+        <time>00:00</time>
+    </hours-list>
+    <hours-list>
+        <day>4</day>
+        <time>08:00</time>
+        <time>00:00</time>
+    </hours-list>
+    <hours-list>
+        <day>5</day>
+        <time>08:00</time>
+        <time>00:00</time>
+    </hours-list>
+    <hours-list>
+        <day>6</day>
+        <time>08:00</time>
+        <time>00:00</time>
+    </hours-list>
+    <hours-list>
+        <day>7</day>
+        <time>08:00</time>
+        <time>00:00</time>
+    </hours-list>
+</post-office-detail>
