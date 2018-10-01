@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info-messages xmlns="http://www.canadapost.ca/ws/shipment-v2">
+    <info-message>
+        <message-type>SO</message-type>
+        <message-text>Please note that we will be performing scheduled maintenance from Saturday, Oct. 12 at 9 p.m. to Sunday, Oct. 13 at 4 a.m. EDT. During this time, Canada Post web services will not be available.
+        </message-text>
+        <from-datetime>2013-10-12T21:00:00-05:00</from-datetime>
+        <to-datetime>2013-10-13T04:00:00-05:00</to-datetime>
+    </info-message>
+</info-messages>
