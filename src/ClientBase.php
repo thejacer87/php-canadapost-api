@@ -3,6 +3,7 @@
 namespace CanadaPost;
 
 use CanadaPost\Exception\ClientException;
+use DateTime;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Response;
@@ -252,7 +253,7 @@ abstract class ClientBase
             $endpoint,
             [
                 'Accept' => 'application/' . $fileType,
-                'Accept-Language' => 'en-CA'
+                'Accept-Language' => 'en-CA',
             ],
             $options
         );
@@ -294,7 +295,7 @@ abstract class ClientBase
         $this->username = $config['username'];
         $this->password = $config['password'];
         $this->customerNumber = $config['customer_number'];
-        $this->contractId = $config['contract_id'] ?? null;
+        $this->contractId = isset($config['contract_id']) ? $config['contract_id'] : null;
     }
 
     /**
@@ -408,7 +409,7 @@ abstract class ClientBase
             // <conflicting-options> group from a Get Option call for options
             // selected by end users or options available for a given service.
             $valid_options[] = [
-                'option-code' => $optionCode
+                'option-code' => $optionCode,
             ];
         }
 
@@ -446,5 +447,33 @@ abstract class ClientBase
     protected function formatPostalCode(&$postal_code)
     {
         strtoupper(str_replace(' ', '', $postal_code));
+    }
+
+    /**
+     * Helper function to verify the dates are valid.
+     *
+     * @param string $from
+     *   The beginning date.
+     * @param $to
+     *   The end date.
+     * @param string $format
+     *   The date format to verify.
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function verifyDates($from, $to, $format = 'YmdHs')
+    {
+        if (!DateTime::createFromFormat($format, $from)) {
+            $message = 'The $from date is improperly formatted. Please use "YmdHs".';
+            throw new \InvalidArgumentException($message);
+        }
+        if (!DateTime::createFromFormat($format, $to)) {
+            $message = 'The $to date is improperly formatted. Please use "YmdHs".';
+            throw new \InvalidArgumentException($message);
+        }
+        if (new DateTime($from) > new DateTime($to)) {
+            $message = 'The $from date cannot be a later date than the $to date.';
+            throw new \InvalidArgumentException($message);
+        }
     }
 }

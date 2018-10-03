@@ -163,6 +163,7 @@ class NCShipment extends ClientBase
         if (empty($to)) {
             $to = date('YmdHs');
         }
+        $this->verifyDates($from, $to);
         $query_params = "from={$from}&to{$to}";
 
         if (!empty($tracking_pin)) {

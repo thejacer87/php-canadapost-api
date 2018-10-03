@@ -112,8 +112,8 @@ class ShipmentTest extends PHPUnit_Framework_TestCase
         ]);
         $handler = HandlerStack::create($mock);
         $shipments = $this->shipmentService->getShipments(
-            '',
-            '',
+            '201809270000',
+            '201810240000',
             '',
             ['handler' => $handler]
         );

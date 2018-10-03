@@ -71,7 +71,12 @@ class Shipment extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $content = $this->buildShipmentArray($sender, $destination, $parcel, $options);
+        $content = $this->buildShipmentArray(
+            $sender,
+            $destination,
+            $parcel,
+            $options
+        );
 
         $xml = Array2XML::createXML('non-contract-shipment', $content);
         $envelope = $xml->documentElement;
@@ -151,15 +156,19 @@ class Shipment extends ClientBase
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getShipments(
-        $from,
+        $from = '',
         $to = '',
         $tracking_pin = '',
         array $options = []
     ) {
-        // TODO convert to shipment API
+        if (!isset($from) && !isset($tracking_pin)) {
+            $message = 'You must include either a $from date or a $tracking_pin.';
+            throw new \InvalidArgumentException($message);
+        }
         if (empty($to)) {
             $to = date('YmdHs');
         }
+        $this->verifyDates($from, $to);
         $query_params = "from={$from}&to{$to}";
 
         if (!empty($tracking_pin)) {
@@ -335,9 +344,9 @@ class Shipment extends ClientBase
     /**
      * Get Manifests from Canada Post within the specified range.
      *
-     * @param string $start
+     * @param string $from
      *   The beginning range. YmdHs format, eg. 201808282359.
-     * @param string $end
+     * @param string $to
      *   The end range, defaults to current time. YmdHs format, eg. 201808282359.
      * @param string $tracking_pin
      *   The Tracking PIN of the shipment to retrieve.
@@ -349,15 +358,21 @@ class Shipment extends ClientBase
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getManifests(
-        $start,
-        $end = '',
+        $from = '',
+        $to = '',
         $tracking_pin = '',
         array $options = []
     ) {
-        if (empty($end)) {
-            $end = date('YmdHs');
+        if (!isset($from) && !isset($tracking_pin)) {
+            $message = 'You must include either a $from date or a $tracking_pin.';
+            throw new \InvalidArgumentException($message);
         }
-        $query_params = "start={$start}&end{$end}";
+        if (empty($to)) {
+            $to = date('YmdHs');
+        }
+
+        $this->verifyDates($from, $to);
+        $query_params = "start={$from}&end{$to}";
 
         if (!empty($tracking_pin)) {
             $query_params = "trackingPIN={$tracking_pin}";

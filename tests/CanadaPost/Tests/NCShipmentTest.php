@@ -97,7 +97,12 @@ class NCShipmentTest extends PHPUnit_Framework_TestCase
             new Response(200, [], $body),
         ]);
         $handler = HandlerStack::create($mock);
-        $shipments = $this->shipmentService->getNCShipments('', '', '', ['handler' => $handler]);
+        $shipments = $this->shipmentService->getNCShipments(
+            '201809270000',
+            '201809270000',
+            '',
+            ['handler' => $handler]
+        );
 
         // Check response.
         $this->assertTrue(is_array($shipments['non-contract-shipments']));
