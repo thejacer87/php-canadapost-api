@@ -152,8 +152,12 @@ abstract class ClientBase
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function post($endpoint, array $headers = [], $payload, array $options = [])
-    {
+    public function post(
+        $endpoint,
+        array $headers = [],
+        $payload,
+        array $options = []
+    ) {
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
@@ -200,7 +204,6 @@ abstract class ClientBase
      */
     public function delete($endpoint, array $headers = [], array $options = [])
     {
-
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
@@ -224,11 +227,10 @@ abstract class ClientBase
             );
         }
         return $this->parseResponse($response);
-
     }
 
     /**
-     * Send the GET request to the Canada Post API.
+     * Send the GET request to the Canada Post API for a specific file.
      *
      * @param string $endpoint
      *   The endpoint to send the request.
@@ -271,9 +273,7 @@ abstract class ClientBase
         $response = $this->getFile(
             $endpoint,
             'pdf',
-            $options + [
-                'raw_response' => true
-            ]
+            array_merge($options, ['raw_response' => true])
         );
         return $response;
     }
@@ -294,7 +294,7 @@ abstract class ClientBase
         $this->username = $config['username'];
         $this->password = $config['password'];
         $this->customerNumber = $config['customer_number'];
-        $this->contractId = $config['contract_id'] ?? NULL;
+        $this->contractId = $config['contract_id'] ?? null;
     }
 
     /**
@@ -393,7 +393,12 @@ abstract class ClientBase
         $valid_options = [];
         foreach ($options['option_codes'] as $optionCode) {
             if (!in_array(strtoupper($optionCode), self::getOptionCodes())) {
-                break;
+                $message = sprintf(
+                    'Unsupported option code "%s". Supported options codes are "%s"',
+                    $optionCode,
+                    implode(', ', array_keys(self::getOptionCodes()))
+                );
+                throw new \InvalidArgumentException($message);
             }
             // @todo Perhaps we should check for conflicts here, might be overkill.
             // From Canada Post docs:
@@ -411,19 +416,35 @@ abstract class ClientBase
     }
 
     /**
-     * Helper function to verify the postal code for an address.
+     * Get the Canada Post-specific option codes,
+     *
+     * @return array
+     *   The array of option codes.
+     *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
+     */
+    public static function getOptionCodes()
+    {
+        return [
+            'SO' => 'Signature (SO)',
+            'PA18' => 'Proof of Age Required - 18 (PA18)',
+            'PA19' => 'Proof of Age Required - 19 (PA19)',
+            'HFP' => 'Card for pickup (HFP)',
+            'DNS' => 'Do not safe drop (DNS)',
+            'LAD' => 'Leave at door - do not card (LAD)',
+        ];
+    }
+
+    /**
+     * Helper function to format the postal code for an address.
      *
      * Canada Post API requires no spaces and uppercase postal code.
      *
-     * @param array $address
-     *   The address to verify.
+     * @param array $postal_code
+     *   The postal code to verify.
      */
-    protected function verifyPostalCode($address)
+    protected function formatPostalCode(&$postal_code)
     {
-       if (empty($address['postal_code'])) {
-           return;
-       }
-
-       strtoupper(str_replace(' ', '', $address['postal_code']));
+        strtoupper(str_replace(' ', '', $postal_code));
     }
 }

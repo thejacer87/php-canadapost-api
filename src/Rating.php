@@ -47,7 +47,10 @@ class Rating extends ClientBase
 
         $xml = Array2XML::createXML('mailing-scenario', $content);
         $envelope = $xml->documentElement;
-        $envelope->setAttribute('xmlns', 'http://www.canadapost.ca/ws/ship/rate-v3');
+        $envelope->setAttribute(
+            'xmlns',
+            'http://www.canadapost.ca/ws/ship/rate-v3'
+        );
         $payload = $xml->saveXML();
 
         $response = $this->post(
@@ -60,25 +63,5 @@ class Rating extends ClientBase
             $options
         );
         return $response;
-    }
-
-    /**
-     * Get the Canada Post-specific option codes,
-     *
-     * @return array
-     *   The array of option codes.
-     *
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
-     */
-    public static function getOptionCodes()
-    {
-        return [
-            'SO' => 'Signature (SO)',
-            'PA18' => 'Proof of Age Required - 18 (PA18)',
-            'PA19' => 'Proof of Age Required - 19 (PA19)',
-            'HFP' => 'Card for pickup (HFP)',
-            'DNS' => 'Do not safe drop (DNS)',
-            'LAD' => 'Leave at door - do not card (LAD)',
-        ];
     }
 }
