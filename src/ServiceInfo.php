@@ -2,6 +2,12 @@
 
 namespace CanadaPost;
 
+/**
+ * ServiceInfo contains Canada Post API calls for service information.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/serviceinfo/default.jsf
+ */
 class ServiceInfo extends ClientBase
 {
     /**
