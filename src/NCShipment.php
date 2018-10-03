@@ -110,7 +110,7 @@ class NCShipment extends ClientBase
         $rel = '',
         array $options = []
     ) {
-        if (isset($rel) && ($rel !== 'details' || $rel !== 'receipt')) {
+        if (!empty($rel) && ($rel !== 'details' || $rel !== 'receipt')) {
             $message = sprintf(
                 'Unsupported "rel" value: "%s". Supported "rel" value are "details", "receipt" or null.',
                 $rel

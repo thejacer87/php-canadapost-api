@@ -111,7 +111,7 @@ class Shipment extends ClientBase
         $rel = '',
         array $options = []
     ) {
-        if (isset($rel) && ($rel !== 'details' || $rel !== 'receipt')) {
+        if (!empty($rel) && ($rel !== 'details' || $rel !== 'receipt')) {
             $message = sprintf(
                 'Unsupported $rel "%s". Supported endpoint are "details", "receipt" or null.',
                 $rel
@@ -309,7 +309,7 @@ class Shipment extends ClientBase
      */
     public function getManifest($manifest_id, $rel = '', array $options = [])
     {
-        if (isset($rel) && ($rel !== 'details')) {
+        if (!empty($rel) && ($rel !== 'details')) {
             $message = sprintf(
                 'Unsupported "rel" value: "%s". Supported "rel" value are "details" or null.',
                 $rel
