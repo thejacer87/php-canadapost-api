@@ -17,10 +17,17 @@ class Tracking extends ClientBase
      *
      * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/tracking/trackingsummary.jsf
      * @return \DOMDocument
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \GuzzleHttp\Exception\GuzzleException|\InvalidArgumentException
      */
     public function getSummary($id, $type = 'pin', array $options = [])
     {
+        if ($type !== 'pin' || $type !== 'dnc') {
+            $message = sprintf(
+                'Unsupported $type: "%s". Supported types are "pin" and "dnc".',
+                $type
+            );
+            throw new \InvalidArgumentException($message);
+        }
         $response = $this->get(
             "vis/track/{$type}/{$id}/summary",
             ['Accept' => 'application/vnd.cpc.track+xml'],

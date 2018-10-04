@@ -112,11 +112,6 @@ abstract class ClientBase
                 'headers' => $headers,
             ];
 
-            // Enable debug option on development environment.
-            if ($this->config['env'] === self::ENV_DEVELOPMENT) {
-                $options['debug'] = TRUE;
-            }
-
             $response = $client->request('GET', $url, $options);
         } catch (GuzzleClientException $exception) {
             $response = $exception->getResponse();
