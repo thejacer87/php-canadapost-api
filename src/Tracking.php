@@ -21,9 +21,9 @@ class Tracking extends ClientBase
      */
     public function getSummary($id, $type = 'pin', array $options = [])
     {
-        if ($type !== 'pin' || $type !== 'dnc') {
+        if ($type !== 'pin' && $type !== 'dnc') {
             $message = sprintf(
-                'Unsupported $type: "%s". Supported types are "pin" and "dnc".',
+                'Unsupported type: "%s". Supported types are "pin" and "dnc".',
                 $type
             );
             throw new \InvalidArgumentException($message);
@@ -52,6 +52,13 @@ class Tracking extends ClientBase
      */
     public function getDetails($id, $type = 'pin', array $options = [])
     {
+        if ($type !== 'pin' && $type !== 'dnc') {
+            $message = sprintf(
+                'Unsupported type: "%s". Supported types are "pin" and "dnc".',
+                $type
+            );
+            throw new \InvalidArgumentException($message);
+        }
         $response = $this->get(
             "vis/track/{$type}/{$id}/details",
             ['Accept' => 'application/vnd.cpc.track+xml'],
