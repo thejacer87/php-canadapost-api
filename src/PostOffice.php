@@ -2,6 +2,12 @@
 
 namespace CanadaPost;
 
+/**
+ * Canada Post API calls to get Post Office details.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/findpostoffice/default.jsf
+ */
 class PostOffice extends ClientBase
 {
     /**
