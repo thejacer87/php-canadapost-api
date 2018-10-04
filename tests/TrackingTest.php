@@ -43,7 +43,7 @@ class TrackingTest extends CanadaPostTestBase
         $handler = HandlerStack::create($mock);
         $response = $this->trackingService->getSummary(
             '',
-            '',
+            'pin',
             ['handler' => $handler]
         );
 
