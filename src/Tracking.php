@@ -2,6 +2,12 @@
 
 namespace CanadaPost;
 
+/**
+ * Canada Post API calls to get tracking details.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/tracking/default.jsf
+ */
 class Tracking extends ClientBase
 {
 
