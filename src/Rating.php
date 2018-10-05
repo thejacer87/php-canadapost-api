@@ -75,7 +75,7 @@ class Rating extends ClientBase
      * Get the Canada Post-specific option codes,
      *
      * @return array
-     *The array of option codes.
+     *   The array of option codes.
      *
      * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
      */
@@ -95,7 +95,7 @@ class Rating extends ClientBase
      * Get the Canada Post specific service codes,
      *
      * @return array
-     *The array of service codes.
+     *   The array of service codes.
      *
      * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
      */
@@ -132,10 +132,10 @@ class Rating extends ClientBase
      * Helper function to extract the option codes.
      *
      * @param array $options
-     *  The options array.
+     *   The options array.
      *
      * @return array
-     *  The list of options with the option-code.
+     *   The list of options with the option-code.
      */
     protected function parseOptionCodes(array $options)
     {
@@ -163,10 +163,10 @@ class Rating extends ClientBase
      * Helper function to extract the service codes.
      *
      * @param array $options
-     *  The options array.
+     *   The options array.
      *
      * @return array
-     *  The list of services to look up.
+     *   The list of services to look up.
      */
     protected function parseServiceCodes(array $options)
     {
