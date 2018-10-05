@@ -172,8 +172,7 @@ class Rating extends ClientBase
     {
         $services = [];
         foreach ($options['service_codes'] as $serviceCode) {
-            if (!array_key_exists(strtoupper($serviceCode),
-                self::getServiceCodes())) {
+            if (!array_key_exists(strtoupper($serviceCode), self::getServiceCodes())) {
                 break;
             }
             $services[] = $serviceCode;
