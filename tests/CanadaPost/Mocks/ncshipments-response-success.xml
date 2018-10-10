@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<non-contract-shipments>
-        <link rel="shipment" href="https://ct.soa-gw.canadapost.ca/rs/0007023211/ncshipment/406951321983787234" media-type="application/vnd.cpc.ncshipment-v4+xml"></link>
-        <link rel="shipment" href="https://ct.soa-gw.canadapost.ca/rs/0007023211/ncshipment/406951321983787352" media-type="application/vnd.cpc.ncshipment-v4+xml"></link>
-        <link rel="shipment" href="https://ct.soa-gw.canadapost.ca/rs/0007023211/ncshipment/406951321983787123" media-type="application/vnd.cpc.ncshipment-v4+xml"></link>
-</non-contract-shipments>
