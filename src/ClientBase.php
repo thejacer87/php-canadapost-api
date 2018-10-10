@@ -3,6 +3,7 @@
 namespace CanadaPost;
 
 use CanadaPost\Exception\ClientException;
+use DateTime;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use GuzzleHttp\Psr7\Response;
@@ -152,8 +153,12 @@ abstract class ClientBase
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function post($endpoint, array $headers = [], $payload, array $options = [])
-    {
+    public function post(
+        $endpoint,
+        array $headers = [],
+        $payload,
+        array $options = []
+    ) {
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
@@ -181,7 +186,6 @@ abstract class ClientBase
         return $this->parseResponse($response);
     }
 
-
     /**
      * Send the DELETE request to the Canada Post API.
      *
@@ -190,18 +194,13 @@ abstract class ClientBase
      * @param array $headers
      *   The HTTP headers array.
      * @param array $options
-     *   An array of options. Supported options are all request options
-     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
-     * plus the following:
-     *     - handler: Don't use unless you have a valid reason or for unit
-     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
+     *   An array of options.
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function delete($endpoint, array $headers = [], array $options = [])
     {
-
         $url = $this->baseUrl . '/' . $endpoint;
 
         try {
@@ -225,22 +224,17 @@ abstract class ClientBase
             );
         }
         return $this->parseResponse($response);
-
     }
 
     /**
-     * Send the GET request to the Canada Post API.
+     * Send the GET request to the Canada Post API for a specific file.
      *
      * @param string $endpoint
      *   The endpoint to send the request.
      * @param string $fileType
      *   The file type of the file to retrieve.
      * @param array $options
-     *   An array of options. Supported options are all request options
-     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
-     * plus the following:
-     *     - handler: Don't use unless you have a valid reason or for unit
-     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
+     *   An array of options.
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -251,7 +245,7 @@ abstract class ClientBase
             $endpoint,
             [
                 'Accept' => 'application/' . $fileType,
-                'Accept-Language' => 'en-CA'
+                'Accept-Language' => 'en-CA',
             ],
             $options
         );
@@ -272,9 +266,7 @@ abstract class ClientBase
         $response = $this->getFile(
             $endpoint,
             'pdf',
-            $options + [
-                'raw_response' => true
-            ]
+            array_merge($options, ['raw_response' => true])
         );
         return $response;
     }
@@ -295,7 +287,7 @@ abstract class ClientBase
         $this->username = $config['username'];
         $this->password = $config['password'];
         $this->customerNumber = $config['customer_number'];
-        $this->contractId = $config['contract_id'] ?? NULL;
+        $this->contractId = isset($config['contract_id']) ? $config['contract_id'] : null;
     }
 
     /**
@@ -381,45 +373,43 @@ abstract class ClientBase
     }
 
     /**
-     * Helper function to extract the option codes.
+     * Helper function to format the postal code for an address.
      *
-     * @param array $options
-     *  The options array.
+     * Canada Post API requires no spaces and uppercase postal code.
      *
-     * @return array
-     *  The list of options with the option-code.
+     * @param array $postal_code
+     *   The postal code to verify.
      */
-    protected function parseOptionCodes(array $options)
+    protected function formatPostalCode(&$postal_code)
     {
-        $valid_options = [];
-        foreach ($options['option_codes'] as $optionCode) {
-            if (!in_array(strtoupper($optionCode), self::getOptionCodes())) {
-                break;
-            }
-            // @todo Perhaps we should check for conflicts here, might be overkill.
-            // From Canada Post docs:
-            // There are some options that can be applied to a shipment that
-            // conflict with the presence of another option. You can use the
-            // "Get Option" call in advance to check the contents of the
-            // <conflicting-options> group from a Get Option call for options
-            // selected by end users or options available for a given service.
-            $valid_options[] = [
-                'option-code' => $optionCode
-            ];
-        }
-
-        return $valid_options;
+        strtoupper(str_replace(' ', '', $postal_code));
     }
 
     /**
-     * @param $address
+     * Helper function to verify the dates are valid.
+     *
+     * @param string $from
+     *   The beginning date.
+     * @param $to
+     *   The end date.
+     * @param string $format
+     *   The date format to verify.
+     *
+     * @throws \InvalidArgumentException
      */
-    protected function verifyPostalCode($address)
+    protected function verifyDates($from, $to, $format = 'YmdHs')
     {
-       if (empty($address['postal_code'])) {
-           return;
-       }
-
-       strtoupper(str_replace(' ', '', $address['postal_code']));
+        if (!DateTime::createFromFormat($format, $from)) {
+            $message = 'The $from date is improperly formatted. Please use "YmdHs".';
+            throw new \InvalidArgumentException($message);
+        }
+        if (!DateTime::createFromFormat($format, $to)) {
+            $message = 'The $to date is improperly formatted. Please use "YmdHs".';
+            throw new \InvalidArgumentException($message);
+        }
+        if (new DateTime($from) > new DateTime($to)) {
+            $message = 'The $from date cannot be a later date than the $to date.';
+            throw new \InvalidArgumentException($message);
+        }
     }
 }
