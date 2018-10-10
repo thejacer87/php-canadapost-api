@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shipment-info>
+    <shipment-id>347881315405043891</shipment-id>
+    <shipment-status>created</shipment-status>
+    <tracking-pin>12345</tracking-pin>
+    <links>
+        <link rel="self" href="https://XX/rs/111111111/2222222222/shipment/347881315405043891"
+              media-type="application/vnd.cpc.shipment-v8+xml"></link>
+        <link rel="details" href="https://XX/rs/111111111/2222222222/shipment/347881315405043891/details"
+              media-type="application/vnd.cpc.shipment-v8+xml"></link>
+        <link rel="group" href="https://XX/rs/111111111/2222222222/shipment?groupid=bobo"
+              media-type="application/vnd.cpc.shipment-v8+xml"></link>
+        <link rel="price" href="https://XX/rs/111111111/2222222222/shipment/347881315405043891/price"
+              media-type="application/vnd.cpc.shipment-v8+xml"></link>
+        <link rel="label" href="https://XX/rs/artifact/11111111/5555555/0" media-type="application/pdf"
+              index="0"></link>
+    </links>
+</shipment-info>

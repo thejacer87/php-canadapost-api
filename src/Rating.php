@@ -6,6 +6,7 @@ use LSS\Array2XML;
 
 class Rating extends ClientBase
 {
+
     /**
      * Get the shipping rates for the given locations and weight.
      *
@@ -19,6 +20,7 @@ class Rating extends ClientBase
      *   The options to pass along to the Guzzle Client.
      *
      * @return \DOMDocument
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getRates(
         $originPostalCode,
