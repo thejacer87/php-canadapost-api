@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shipment-details>
+    <shipment-status>reconciled</shipment-status>
+    <final-shipping-point>K1G1C0</final-shipping-point>
+    <shipping-point-id>0015</shipping-point-id>
+    <tracking-pin>1234567890123456</tracking-pin>
+    <shipment-detail>
+        <group-id>bobo</group-id>
+        <requested-shipping-point>K1G1C0</requested-shipping-point>
+        <expected-mailing-date>2011-09-01</expected-mailing-date>
+        <delivery-spec>
+            <service-code>DOM.EP</service-code>
+            <sender>
+                <name>Bob</name>
+                <company>CGI</company>
+                <address-details>
+                    <address-line-1>502 MAIN ST N</address-line-1>
+                    <city>MONTREAL</city>
+                    <prov-state>QC</prov-state>
+                    <country-code>CA</country-code>
+                    <postal-zip-code>H2B1A0</postal-zip-code>
+                </address-details>
+            </sender>
+            <destination>
+                <name>Jain</name>
+                <company>CGI</company>
+                <address-details>
+                    <address-line-1>23 jardin private</address-line-1>
+                    <city>Ottawa</city>
+                    <prov-state>ON</prov-state>
+                    <country-code>CA</country-code>
+                    <postal-zip-code>K1K4T3</postal-zip-code>
+                </address-details>
+            </destination>
+            <options>
+                <option>
+                    <option-code>DC</option-code>
+                </option>
+            </options>
+            <parcel-characteristics>
+                <weight>20.000</weight>
+                <dimensions>
+                    <length>12</length>
+                    <width>9</width>
+                    <height>6</height>
+                </dimensions>
+                <unpackaged>true</unpackaged>
+                <mailing-tube>false</mailing-tube>
+                <oversized>false</oversized>
+            </parcel-characteristics>
+            <notification>
+                <email>john.doe@yahoo.com</email>
+                <on-shipment>true</on-shipment>
+                <on-exception>false</on-exception>
+                <on-delivery>true</on-delivery>
+            </notification>
+            <print-preferences>
+                <output-format>8.5x11</output-format>
+            </print-preferences>
+            <preferences>
+                <show-packing-instructions>true</show-packing-instructions>
+                <show-postage-rate>false</show-postage-rate>
+                <show-insured-value>true</show-insured-value>
+            </preferences>
+            <settlement-info>
+                <paid-by-customer>0001234567</paid-by-customer>
+                <contract-id>0012345678</contract-id>
+                <intended-method-of-payment>Account</intended-method-of-payment>
+            </settlement-info>
+        </delivery-spec>
+    </shipment-detail>
+</shipment-details>
+
