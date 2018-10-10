@@ -142,7 +142,7 @@ class Returns extends ClientBase
         array $options = []
     ) {
 
-        $this->formatPostalCode($receiver);
+        $this->formatPostalCode($receiver['domestic-address']['postal-code']);
         $content = [
             'max-number-of-artifacts' => 10,
             'service-code' => $parcel['service_code'],

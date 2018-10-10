@@ -98,7 +98,12 @@ class ShipmentTest extends CanadaPostTestBase
             new Response(200, [], $body),
         ]);
         $handler = HandlerStack::create($mock);
-        $shipments = $this->shipmentService->getShipments('', '', '', ['handler' => $handler]);
+        $shipments = $this->shipmentService->getShipments(
+            '201808282359',
+            '201808282359',
+            '',
+            ['handler' => $handler]
+        );
 
         // Check response.
         $this->assertTrue(is_array($shipments['non-contract-shipments']));
