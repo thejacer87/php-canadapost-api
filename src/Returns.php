@@ -4,8 +4,15 @@ namespace CanadaPost;
 
 use LSS\Array2XML;
 
+/**
+ * Returns contains Canada Post API calls for returns.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/returns/default.jsf
+ */
 class Returns extends ClientBase
 {
+
     /**
      * Create an authorized return.
      *
@@ -62,8 +69,8 @@ class Returns extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->verifyPostalCode($returner);
-        $this->verifyPostalCode($receiver);
+        $this->formatPostalCode($returner['domestic-address']['postal-code']);
+        $this->formatPostalCode($receiver['domestic-address']['postal-code']);
         $content = [
             'service-code' => $parcel['service_code'],
             'returner' => $returner,
@@ -135,7 +142,7 @@ class Returns extends ClientBase
         array $options = []
     ) {
 
-        $this->verifyPostalCode($receiver);
+        $this->formatPostalCode($receiver);
         $content = [
             'max-number-of-artifacts' => 10,
             'service-code' => $parcel['service_code'],
@@ -302,8 +309,8 @@ class Returns extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->verifyPostalCode($returner);
-        $this->verifyPostalCode($receiver);
+        $this->formatPostalCode($returner);
+        $this->formatPostalCode($receiver);
         $return_info = [
             'service-code' => $parcel['service_code'],
             'returner' => $returner,
@@ -317,4 +324,5 @@ class Returns extends ClientBase
 
         return $return_info;
     }
+
 }
