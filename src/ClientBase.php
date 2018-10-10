@@ -194,11 +194,7 @@ abstract class ClientBase
      * @param array $headers
      *   The HTTP headers array.
      * @param array $options
-     *   An array of options. Supported options are all request options
-     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
-     * plus the following:
-     *     - handler: Don't use unless you have a valid reason or for unit
-     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
+     *   An array of options.
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -238,11 +234,7 @@ abstract class ClientBase
      * @param string $fileType
      *   The file type of the file to retrieve.
      * @param array $options
-     *   An array of options. Supported options are all request options
-     * supported by Guzzle http://docs.guzzlephp.org/en/stable/request-options.html
-     * plus the following:
-     *     - handler: Don't use unless you have a valid reason or for unit
-     *       testing - http://docs.guzzlephp.org/en/stable/testing.html#mock-handler
+     *   An array of options.
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException

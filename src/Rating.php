@@ -4,6 +4,12 @@ namespace CanadaPost;
 
 use LSS\Array2XML;
 
+/**
+ * Rating contains Canada Post API calls for package rates.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/default.jsf
+ */
 class Rating extends ClientBase
 {
 
@@ -17,7 +23,9 @@ class Rating extends ClientBase
      * @param float $weight
      *   The weight of the package (kg).
      * @param array $options
-     *   The options to pass along to the Guzzle Client.
+     *   The array of options. Rating specific options:
+     *     - service_codes: https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
+     *     - options_codes: https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
      *
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -45,6 +53,9 @@ class Rating extends ClientBase
             ],
         ];
 
+        // TODO split the options for Canada Post from the options for Guzzle.
+        // They can either be separate variables or the Canada Post options can
+        // be within a sub-array keyed by canada_post (or the other way around).
         if (!empty($options['service_codes'])) {
             $content['services']['service-code'] = $this->parseServiceCodes($options);
         }
@@ -175,7 +186,12 @@ class Rating extends ClientBase
         $services = [];
         foreach ($options['service_codes'] as $serviceCode) {
             if (!array_key_exists(strtoupper($serviceCode), self::getServiceCodes())) {
-                break;
+                $message = sprintf(
+                    'Unsupported service code: "%s". Supported services are %s',
+                    $serviceCode,
+                    implode(', ', array_keys(self::getServiceCodes()))
+                );
+                throw new \InvalidArgumentException($message);
             }
             $services[] = $serviceCode;
         }
