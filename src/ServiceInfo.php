@@ -6,15 +6,14 @@ namespace CanadaPost;
  * ServiceInfo contains Canada Post API calls for service information.
  *
  * @package CanadaPost
- * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/serviceinfo/default.jsf
+ * @see     https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/serviceinfo/default.jsf
  */
 class ServiceInfo extends ClientBase
 {
     /**
      * Get messages about upcoming outages to Canada Post web services.
      *
-     * @param array $options
-     *   The options to pass along to the Guzzle Client.
+     * @param array $options The options to pass along to the Guzzle Client.
      *
      * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/serviceinfo/getserviceinfo.jsf
      * @return \DOMDocument
