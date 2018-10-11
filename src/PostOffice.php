@@ -6,7 +6,7 @@ namespace CanadaPost;
  * Canada Post API calls to get Post Office details.
  *
  * @package CanadaPost
- * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/findpostoffice/default.jsf
+ * @see     https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/findpostoffice/default.jsf
  */
 class PostOffice extends ClientBase
 {
@@ -17,13 +17,13 @@ class PostOffice extends ClientBase
      *   The postal code.
      * @param bool $d2po
      *   True indicates that you want a list of Post Offices that accept the
-     * "Deliver to Post Office" delivery of parcels. Use this when you want the
-     * parcel to be delivered directly to a Post Office rather than to the
-     * recipient’s address
+     *   "Deliver to Post Office" delivery of parcels. Use this when you want
+     *   the parcel to be delivered directly to a Post Office rather than to the
+     *   recipient’s address.
      * @param int $max_addresses
      *   The maximum number of Post Offices to return with the response. The
-     * maximum allowed is 50. In remote locations, fewer Post Offices than
-     * requested may be returned.
+     *   maximum allowed is 50. In remote locations, fewer Post Offices than
+     *   requested may be returned.
      * @param array $options
      *   The options array.
      *
@@ -55,20 +55,20 @@ class PostOffice extends ClientBase
      *   The city.
      * @param string $street_name
      *   Street name onl (ie. without the house or apartment number). Street
-     * name can be a multi-part name with embedded spaces.
-     *   If City and Province are specified, provision of this parameter will
-     * refine the list to a more specific location in the city indicated.
-     *   For larger municipalities a list might not be returned if the street
-     * name is not provided in addition to the City and Province attributes.
+     *   name can be a multi-part name with embedded spaces. If City and
+     *   Province are specified, provision of this parameter will refine the
+     *   list to a more specific location in the city indicated. For larger
+     *   municipalities a list might not be returned if the street name is not
+     *   provided in addition to the City and Province attributes.
      * @param bool $d2po
      *   True indicates that you want a list of Post Offices that accept the
-     * "Deliver to Post Office" delivery of parcels. Use this when you want the
-     * parcel to be delivered directly to a Post Office rather than to the
-     * recipient’s address
+     *   "Deliver to Post Office" delivery of parcels. Use this when you want
+     *   the parcel to be delivered directly to a Post Office rather than to
+     *   the recipient’s address.
      * @param int $max_addresses
      *   The maximum number of Post Offices to return with the response. The
-     * maximum allowed is 50. In remote locations, fewer Post Offices than
-     * requested may be returned.
+     *   maximum allowed is 50. In remote locations, fewer Post Offices than
+     *   requested may be returned.
      * @param array $options
      *   The options array.
      *
@@ -94,27 +94,27 @@ class PostOffice extends ClientBase
     }
 
     /**
-     * Get information on Post Offices nearest to a given geographical location.
+     * Get information on Post Offices nearest to a given geographical
+     * location.
      *
      * @param string $longitude
-     *   The longitude.
-     * Format is 10 characters of the form: [-]3.5
-     * ie. up to 3 digits before the decimal and 5 digits after the decimal
-     * eg. -101.32354
+     *   The longitude. Format is 10 characters of the form: [-]3.5
+     *   ie. up to 3 digits before the decimal and 5 digits after the decimal
+     *   eg. -101.32354
      * @param string $latitude
      *   The latitude.
-     * Format is 10 characters of the form: [-]3.5
-     * ie. up to 3 digits before the decimal and 5 digits after the decimal
-     * eg. 55.32354
+     *   Format is 10 characters of the form: [-]3.5
+     *   ie. up to 3 digits before the decimal and 5 digits after the decimal
+     *   eg. 55.32354
      * @param bool $d2po
      *   True indicates that you want a list of Post Offices that accept the
-     * "Deliver to Post Office" delivery of parcels. Use this when you want the
-     * parcel to be delivered directly to a Post Office rather than to the
-     * recipient’s address
+     *   "Deliver to Post Office" delivery of parcels. Use this when you want
+     *   the parcel to be delivered directly to a Post Office rather than to
+     *   the recipient’s address.
      * @param int $max_addresses
      *   The maximum number of Post Offices to return with the response. The
-     * maximum allowed is 50. In remote locations, fewer Post Offices than
-     * requested may be returned.
+     *   maximum allowed is 50. In remote locations, fewer Post Offices than
+     *   requested may be returned.
      * @param array $options
      *   The options array.
      *
@@ -141,7 +141,7 @@ class PostOffice extends ClientBase
     /**
      * Get additional information about a specific Post Office.
      *
-     * @param $endpoint
+     * @param string $endpoint
      *   Link provided from Get Nearest Post Office.
      * @param array $options
      *   The options array.
