@@ -447,7 +447,12 @@ abstract class ClientBase
         $valid_options = [];
         foreach ($options['option_codes'] as $optionCode) {
             if (!in_array(strtoupper($optionCode), self::getOptionCodes())) {
-                continue;
+                $message = sprintf(
+                    'Unsupported option code: "%s". Supported options are %s',
+                    $optionCode,
+                    implode(', ', array_keys(self::getOptionCodes()))
+                );
+                throw new \InvalidArgumentException($message);
             }
             // @todo Perhaps we should check for conflicts here, might be overkill.
             // From Canada Post docs:
