@@ -43,7 +43,7 @@ class TrackingTest extends CanadaPostTestBase
         $handler = HandlerStack::create($mock);
         $response = $this->trackingService->getSummary(
             '',
-            '',
+            'pin',
             ['handler' => $handler]
         );
 
@@ -81,7 +81,7 @@ class TrackingTest extends CanadaPostTestBase
         $handler = HandlerStack::create($mock);
         $response = $this->trackingService->getDetails(
             '',
-            '',
+            'dnc',
             ['handler' => $handler]
         );
 
@@ -164,6 +164,40 @@ class TrackingTest extends CanadaPostTestBase
         $this->assertEquals('QUEBEC', $events['occurrence'][5]['event-site']);
         $this->assertEquals('QC', $events['occurrence'][5]['event-province']);
 
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Unsupported type: "wrong". Supported types are "pin" and "dnc".
+     */
+    public function testGetSummaryInvalidArgument()
+    {
+        $mock = new MockHandler([
+            new Response(200),
+        ]);
+        $handler = HandlerStack::create($mock);
+        $this->trackingService->getSummary(
+            '',
+            'wrong',
+            ['handler' => $handler]
+        );
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Unsupported type: "wrong". Supported types are "pin" and "dnc".
+     */
+    public function testGetDetailsInvalidArgument()
+    {
+        $mock = new MockHandler([
+            new Response(200),
+        ]);
+        $handler = HandlerStack::create($mock);
+        $this->trackingService->getDetails(
+            '',
+            'wrong',
+            ['handler' => $handler]
+        );
     }
 
 }

@@ -4,8 +4,15 @@ namespace CanadaPost;
 
 use LSS\Array2XML;
 
+/**
+ * Returns contains Canada Post API calls for returns.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/returns/default.jsf
+ */
 class Returns extends ClientBase
 {
+
     /**
      * Create an authorized return.
      *
@@ -62,18 +69,12 @@ class Returns extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->verifyPostalCode($returner);
-        $this->verifyPostalCode($receiver);
-        $content = [
-            'service-code' => $parcel['service_code'],
-            'returner' => $returner,
-            'receiver' => $receiver,
-            'parcel-characteristics' => $parcel,
-        ];
-
-        if (!empty($options['option_codes'])) {
-            $content['options']['option'] = $this->parseOptionCodes($options);
-        }
+        $content = $this->buildReturnsArray(
+            $returner,
+            $receiver,
+            $parcel,
+            $options
+        );
 
         $xml = Array2XML::createXML('authorized-return', $content);
         $envelope = $xml->documentElement;
@@ -135,7 +136,7 @@ class Returns extends ClientBase
         array $options = []
     ) {
 
-        $this->verifyPostalCode($receiver);
+        $this->formatPostalCode($receiver['domestic-address']['postal-code']);
         $content = [
             'max-number-of-artifacts' => 10,
             'service-code' => $parcel['service_code'],
@@ -244,6 +245,7 @@ class Returns extends ClientBase
         }
         $query_params = "from={$from}&to{$to}";
 
+        $this->verifyDates($from, $to);
 
         $response = $this->get(
             "rs/{$this->config['customer_number']}/{$this->config['customer_number']}/openreturn?{$query_params}",
@@ -302,8 +304,8 @@ class Returns extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->verifyPostalCode($returner);
-        $this->verifyPostalCode($receiver);
+        $this->formatPostalCode($returner['domestic-address']['postal-code']);
+        $this->formatPostalCode($receiver['domestic-address']['postal-code']);
         $return_info = [
             'service-code' => $parcel['service_code'],
             'returner' => $returner,
@@ -317,4 +319,5 @@ class Returns extends ClientBase
 
         return $return_info;
     }
+
 }
