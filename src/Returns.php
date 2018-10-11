@@ -69,18 +69,12 @@ class Returns extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->formatPostalCode($returner['domestic-address']['postal-code']);
-        $this->formatPostalCode($receiver['domestic-address']['postal-code']);
-        $content = [
-            'service-code' => $parcel['service_code'],
-            'returner' => $returner,
-            'receiver' => $receiver,
-            'parcel-characteristics' => $parcel,
-        ];
-
-        if (!empty($options['option_codes'])) {
-            $content['options']['option'] = $this->parseOptionCodes($options);
-        }
+        $content = $this->buildReturnsArray(
+            $returner,
+            $receiver,
+            $parcel,
+            $options
+        );
 
         $xml = Array2XML::createXML('authorized-return', $content);
         $envelope = $xml->documentElement;
@@ -251,6 +245,7 @@ class Returns extends ClientBase
         }
         $query_params = "from={$from}&to{$to}";
 
+        $this->verifyDates($from, $to);
 
         $response = $this->get(
             "rs/{$this->config['customer_number']}/{$this->config['customer_number']}/openreturn?{$query_params}",
@@ -309,8 +304,8 @@ class Returns extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->formatPostalCode($returner);
-        $this->formatPostalCode($receiver);
+        $this->formatPostalCode($returner['domestic-address']['postal-code']);
+        $this->formatPostalCode($receiver['domestic-address']['postal-code']);
         $return_info = [
             'service-code' => $parcel['service_code'],
             'returner' => $returner,

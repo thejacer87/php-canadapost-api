@@ -153,7 +153,11 @@ abstract class ClientBase
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function post($endpoint, array $headers = [], $payload, array $options = []
+    public function post(
+        $endpoint,
+        array $headers = [],
+        $payload,
+        array $options = []
     ) {
         $url = $this->baseUrl . '/' . $endpoint;
 
@@ -393,7 +397,7 @@ abstract class ClientBase
      *
      * Canada Post API requires no spaces and uppercase postal code.
      *
-     * @param array $postal_code
+     * @param string $postal_code
      *   The postal code to verify.
      */
     protected function formatPostalCode(&$postal_code)

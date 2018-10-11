@@ -23,7 +23,7 @@ class ReturnsTest extends CanadaPostTestBase
     protected $returnsService;
 
     /**
-     * Build the $ratingService to be tested.
+     * Build the $returnsService to be tested.
      */
     public function setUp()
     {
