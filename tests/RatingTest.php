@@ -6,13 +6,12 @@ use CanadaPost\Rating;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Rating Class Tests.
  * @group Rating
  */
-class RatingTest extends PHPUnit_Framework_TestCase
+class RatingTest extends CanadaPostTestBase
 {
 
     /**
@@ -27,12 +26,8 @@ class RatingTest extends PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $config = [
-            'username' => 'username',
-            'password' => 'password',
-            'customer_number' => 'customer_number',
-        ];
-        $this->ratingService = new Rating($config);
+        parent::setUp();
+        $this->ratingService = new Rating($this->config);
     }
 
     /**
@@ -42,7 +37,8 @@ class RatingTest extends PHPUnit_Framework_TestCase
      */
     public function getRates()
     {
-        $body = file_get_contents(__DIR__ . '/../Mocks/rating-response-success.xml');
+        $body = file_get_contents(__DIR__
+            . '/Mocks/rating-response-success.xml');
         $mock = new MockHandler([
             new Response(200, [], $body),
         ]);

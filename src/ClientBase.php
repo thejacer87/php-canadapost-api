@@ -272,6 +272,26 @@ abstract class ClientBase
     }
 
     /**
+     * Get the Canada Post-specific option codes,
+     *
+     * @return array
+     *   The array of option codes.
+     *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
+     */
+    public static function getOptionCodes()
+    {
+        return [
+            'SO' => 'Signature (SO)',
+            'PA18' => 'Proof of Age Required - 18 (PA18)',
+            'PA19' => 'Proof of Age Required - 19 (PA19)',
+            'HFP' => 'Card for pickup (HFP)',
+            'DNS' => 'Do not safe drop (DNS)',
+            'LAD' => 'Leave at door - do not card (LAD)',
+        ];
+    }
+
+    /**
      * Set the API configuration array for the Client.
      *
      * @param array $config
@@ -377,7 +397,7 @@ abstract class ClientBase
      *
      * Canada Post API requires no spaces and uppercase postal code.
      *
-     * @param array $postal_code
+     * @param string $postal_code
      *   The postal code to verify.
      */
     protected function formatPostalCode(&$postal_code)
@@ -411,5 +431,41 @@ abstract class ClientBase
             $message = 'The $from date cannot be a later date than the $to date.';
             throw new \InvalidArgumentException($message);
         }
+    }
+
+    /**
+     * Helper function to extract the option codes.
+     *
+     * @param array $options
+     *   The options array.
+     *
+     * @return array
+     *   The list of options with the option-code.
+     */
+    protected function parseOptionCodes(array $options)
+    {
+        $valid_options = [];
+        foreach ($options['option_codes'] as $optionCode) {
+            if (!in_array(strtoupper($optionCode), self::getOptionCodes())) {
+                $message = sprintf(
+                    'Unsupported option code: "%s". Supported options are %s',
+                    $optionCode,
+                    implode(', ', array_keys(self::getOptionCodes()))
+                );
+                throw new \InvalidArgumentException($message);
+            }
+            // @todo Perhaps we should check for conflicts here, might be overkill.
+            // From Canada Post docs:
+            // There are some options that can be applied to a shipment that
+            // conflict with the presence of another option. You can use the
+            // "Get Option" call in advance to check the contents of the
+            // <conflicting-options> group from a Get Option call for options
+            // selected by end users or options available for a given service.
+            $valid_options[] = [
+                'option-code' => $optionCode,
+            ];
+        }
+
+        return $valid_options;
     }
 }

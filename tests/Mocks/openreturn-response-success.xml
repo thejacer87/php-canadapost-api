@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<open-return-info>
+    <artifacts-remaining>10</artifacts-remaining>
+    <links>
+        <link rel="self" href="https://ct.soa-gw.canadapost.ca/rs/0007023211/0007023211/openreturn/349641323786705649"
+              media-type="application/vnd.cpc.openreturn-v2+xml"></link>
+        <link rel="details"
+              href="https://ct.soa-gw.canadapost.ca/rs/0007023211/0007023211/openreturn/349641323786705649/details"
+              media-type="application/vnd.cpc.openreturn-v2+xml"></link>
+        <link rel="nextArtifact"
+              href="https://ct.soa-gw.canadapost.ca/rs/0007023211/0007023211/openreturn/349641323786705649/artifact"
+              media-type="application/pdf"></link>
+    </links>
+</open-return-info>
