@@ -4,6 +4,12 @@ namespace CanadaPost;
 
 use LSS\Array2XML;
 
+/**
+ * Shipment contains Canada Post API calls for contract shipments.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/default.jsf
+ */
 class Shipment extends ClientBase
 {
 
@@ -65,12 +71,19 @@ class Shipment extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $content = $this->buildShipmentArray($sender, $destination, $parcel, $options);
+        $content = $this->buildShipmentArray(
+            $sender,
+            $destination,
+            $parcel,
+            $options
+        );
 
         $xml = Array2XML::createXML('non-contract-shipment', $content);
         $envelope = $xml->documentElement;
-        $envelope->setAttribute('xmlns',
-            'http://www.canadapost.ca/ws/shipment-v8');
+        $envelope->setAttribute(
+            'xmlns',
+            'http://www.canadapost.ca/ws/shipment-v8'
+        );
         $payload = $xml->saveXML();
 
         $response = $this->post(
@@ -90,23 +103,40 @@ class Shipment extends ClientBase
      *
      * @param string $shipment_id
      *   The shipment id.
-     * @param string $extra
-     *   Gets the specific details for a shipment. Either 'details' or 'receipt'.
+     * @param string $rel
+     *   The 'rel' value from the links for a shipment. Either 'details' or 'receipt'.
      * @param array $options
      *   The options array.
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getShipment($shipment_id, $extra = '', array $options = [])
-    {
+    public function getShipment(
+        $shipment_id,
+        $rel = '',
+        array $options = []
+    ) {
+        if (!empty($rel) && ($rel !== 'details' || $rel !== 'receipt')) {
+            $message = sprintf(
+                'Unsupported $rel "%s". Supported endpoint are "details", "receipt" or null.',
+                $rel
+            );
+            throw new \InvalidArgumentException($message);
+        }
+
+        $endpoint = sprintf(
+            'rs/%s/%s/shipment/%s/%s',
+            $this->config['customer_number'],
+            $this->config['customer_number'],
+            $shipment_id,
+            $rel
+        );
         $response = $this->get(
-            "rs/{$this->customerNumber}/{$this->customerNumber}/shipment/{$shipment_id}/{$extra}",
+            $endpoint,
             ['Accept' => 'application/vnd.cpc.shipment-v8+xml'],
             $options
         );
         return $response;
-
     }
 
     /**
@@ -121,16 +151,24 @@ class Shipment extends ClientBase
      * @param array $options
      *   The options array.
      *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/shipments.jsf
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
      */
-    public function getShipments($from, $to = '', $tracking_pin = '', array $options = [])
-    {
-        // TODO convert to shipment API
+    public function getShipments(
+        $from = '',
+        $to = '',
+        $tracking_pin = '',
+        array $options = []
+    ) {
+        if (!isset($from) && !isset($tracking_pin)) {
+            $message = 'You must include either a $from date or a $tracking_pin.';
+            throw new \InvalidArgumentException($message);
+        }
         if (empty($to)) {
             $to = date('YmdHs');
         }
+        $this->verifyDates($from, $to);
         $query_params = "from={$from}&to{$to}";
 
         if (!empty($tracking_pin)) {
@@ -143,21 +181,48 @@ class Shipment extends ClientBase
             $options
         );
         return $response;
-
     }
 
-    public function requestShipmentRefund($shipment_id, $email, $options) {
+    /**
+     * Request a refund for a shipment that has been transmitted.
+     *
+     * @param string $shipment_id
+     *   The shipment id.
+     * @param string $email
+     *   The email that will receive updates from Canada Post.
+     * @param array $options
+     *   The options to pass along to the Guzzle Client.
+     *
+     * @return \DOMDocument
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/shipmentrefund.jsf
+     * for all available options for the sender,destination and parcel params.
+     */
+    public function requestShipmentRefund($shipment_id, $email, $options)
+    {
         $content = [
-            'email' => $email
+            'email' => $email,
         ];
 
-        $xml = Array2XML::createXML('non-contract-shipment-refund-request', $content);
+        $xml = Array2XML::createXML(
+            'non-contract-shipment-refund-request',
+            $content
+        );
         $envelope = $xml->documentElement;
-        $envelope->setAttribute('xmlns',
-            'http://www.canadapost.ca/ws/shipment-v8');
+        $envelope->setAttribute(
+            'xmlns',
+            'http://www.canadapost.ca/ws/shipment-v8'
+        );
         $payload = $xml->saveXML();
+
+        $endpoint = sprintf(
+            'rs/%s/%s/shipment/%s/refund',
+            $this->config['customer_number'],
+            $this->config['customer_number'],
+            $shipment_id
+        );
         $response = $this->post(
-            "rs/{$this->config['customer_number']}/{$this->config['customer_number']}/shipment/{$shipment_id}/refund",
+            $endpoint,
             [
                 'Content-Type' => 'application/vnd.cpc.shipment-v8+xml',
                 'Accept' => 'application/vnd.cpc.shipment-v8+xml',
@@ -203,10 +268,10 @@ class Shipment extends ClientBase
         array $group_ids,
         array $options = []
     ) {
-        $this->verifyPostalCode($manifest_address);
+        $this->formatPostalCode($manifest_address['address-details']['postal-zip-code']);
         $content = [
             'group-ids' => [
-                'group-id' => $group_ids
+                'group-id' => $group_ids,
             ],
             'requested-shipping-point' => $manifest_address['address-details']['postal-zip-code'],
             'cpc-pickup-indicator' => true,
@@ -220,8 +285,10 @@ class Shipment extends ClientBase
 
         $xml = Array2XML::createXML('transmit-set', $content);
         $envelope = $xml->documentElement;
-        $envelope->setAttribute('xmlns',
-            'http://www.canadapost.ca/ws/manifest-v8');
+        $envelope->setAttribute(
+            'xmlns',
+            'http://www.canadapost.ca/ws/manifest-v8'
+        );
         $payload = $xml->saveXML();
 
         $response = $this->post(
@@ -234,7 +301,6 @@ class Shipment extends ClientBase
             $options
         );
         return $response;
-
     }
 
     /**
@@ -242,63 +308,88 @@ class Shipment extends ClientBase
      *
      * @param string $manifest_id
      *   The manifest id.
-     * @param string $extra
-     *   Gets the specific details for a shipment.
+     * @param string $rel
+     *   The 'rel' value from the links for a manifest. 'details' is the only valid argument.
      * @param array $options
      *   The options array.
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getManifest($manifest_id, $extra = '', array $options = [])
+    public function getManifest($manifest_id, $rel = '', array $options = [])
     {
+        if (!empty($rel) && ($rel !== 'details')) {
+            $message = sprintf(
+                'Unsupported "rel" value: "%s". Supported "rel" value are "details" or null.',
+                $rel
+            );
+            throw new \InvalidArgumentException($message);
+        }
+
+        $endpoint = sprintf(
+            'rs/%s/%s/manifest/%s/%s',
+            $this->config['customer_number'],
+            $this->config['customer_number'],
+            $manifest_id,
+            $rel
+        );
         $response = $this->get(
-            "rs/{$this->config['customer_number']}/{$this->config['customer_number']}/manifest/{$manifest_id}/{$extra}",
+            $endpoint,
             ['Accept' => 'application/vnd.cpc.manifest-v8+xml'],
             $options
         );
         return $response;
-
     }
 
     /**
      * Get Manifests from Canada Post within the specified range.
      *
-     * @param string $start
+     * @param string $from
      *   The beginning range. YmdHs format, eg. 201808282359.
-     * @param string $end
+     * @param string $to
      *   The end range, defaults to current time. YmdHs format, eg. 201808282359.
      * @param string $tracking_pin
      *   The Tracking PIN of the shipment to retrieve.
      * @param array $options
      *   The options array.
      *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/manifests.jsf
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/shippingmanifest/manifests.jsf
      */
     public function getManifests(
-        $start,
-        $end = '',
+        $from = '',
+        $to = '',
         $tracking_pin = '',
         array $options = []
     ) {
-        if (empty($end)) {
-            $end = date('YmdHs');
+        if (!isset($from) && !isset($tracking_pin)) {
+            $message = 'You must include either a $from date or a $tracking_pin.';
+            throw new \InvalidArgumentException($message);
         }
-        $query_params = "start={$start}&end{$end}";
+        if (empty($to)) {
+            $to = date('YmdHs');
+        }
+
+        $this->verifyDates($from, $to);
+        $query_params = "start={$from}&end{$to}";
 
         if (!empty($tracking_pin)) {
             $query_params = "trackingPIN={$tracking_pin}";
         }
 
+        $endpoint = sprintf(
+            'rs/%s/%s/manifest?%s',
+            $this->config['customer_number'],
+            $this->config['customer_number'],
+            $query_params
+        );
         $response = $this->get(
-            "rs/{$this->customerNumber}/{$this->customerNumber}/manifest?" . $query_params,
+            $endpoint,
             ['Accept' => 'application/vnd.cpc.manifest-v8+xml'],
             $options
         );
         return $response;
-
     }
 
     /**
@@ -322,8 +413,8 @@ class Shipment extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->verifyPostalCode($sender);
-        $this->verifyPostalCode($destination);
+        $this->formatPostalCode($sender['address-details']['postal-zip-code']);
+        $this->formatPostalCode($destination['address-details']['postal-zip-code']);
         $shipment_info = [
             'requested-shipping-point' => $destination['address-details']['postal-zip-code'],
             'cpc-pickup-indicator' => true,
@@ -338,7 +429,7 @@ class Shipment extends ClientBase
                 'notification' => [],
                 'settlement-info' => [
                     'contract-id' => '',
-                    'intended-method-of-payment' => 'Account'
+                    'intended-method-of-payment' => 'Account',
                 ],
             ],
         ];

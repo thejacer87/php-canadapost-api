@@ -4,6 +4,12 @@ namespace CanadaPost;
 
 use LSS\Array2XML;
 
+/**
+ * NCShipment contains Canada Post API calls for non-contract shipments.
+ *
+ * @package CanadaPost
+ * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/default.jsf
+ */
 class NCShipment extends ClientBase
 {
 
@@ -69,8 +75,10 @@ class NCShipment extends ClientBase
 
         $xml = Array2XML::createXML('non-contract-shipment', $content);
         $envelope = $xml->documentElement;
-        $envelope->setAttribute('xmlns',
-            'http://www.canadapost.ca/ws/ncshipment-v4');
+        $envelope->setAttribute(
+            'xmlns',
+            'http://www.canadapost.ca/ws/ncshipment-v4'
+        );
         $payload = $xml->saveXML();
 
         $response = $this->post(
@@ -89,27 +97,45 @@ class NCShipment extends ClientBase
      * Get NCShipment from Canada Post.
      * @param string $shipment_id
      *   The shipment id
-     * @param string $extra
-     *   Gets the specific details for a shipment. Either 'details' or 'receipt'.
+     * @param string $rel
+     *   The 'rel' value from the links for a shipment. Either 'details' or 'receipt'.
      * @param array $options
      *   The options array.
      *
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getNCShipment($shipment_id, $extra = '', array $options = [])
-    {
+    public function getNCShipment(
+        $shipment_id,
+        $rel = '',
+        array $options = []
+    ) {
+        if (!empty($rel) && ($rel !== 'details' || $rel !== 'receipt')) {
+            $message = sprintf(
+                'Unsupported "rel" value: "%s". Supported "rel" value are "details", "receipt" or null.',
+                $rel
+            );
+            throw new \InvalidArgumentException($message);
+        }
+
+        $endpoint = sprintf(
+            'rs/%s/ncshipment/%s/%s',
+            $this->config['customer_number'],
+            $shipment_id,
+            $rel
+        );
         $response = $this->get(
-            "rs/{$this->config['customer_number']}/ncshipment/{$shipment_id}/{$extra}",
+            $endpoint,
             ['Accept' => 'application/vnd.cpc.ncshipment-v4+xml'],
             $options
         );
         return $response;
-
     }
 
     /**
      * Get NCShipments from Canada Post within the specified range.
+     *
+     * If you supply a tracking PIN, the from/to dates will be ignored.
      *
      * @param string $from
      *   The beginning range. YmdHs format, eg. 201808282359.
@@ -120,39 +146,73 @@ class NCShipment extends ClientBase
      * @param array $options
      *   The options array.
      *
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
      * @return \DOMDocument|\Psr\Http\Message\StreamInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/onestepshipments.jsf
      */
-    public function getNCShipments($from = '', $to = '', $tracking_pin = '', array $options = [])
-    {
+    public function getNCShipments(
+        $from = '',
+        $to = '',
+        $tracking_pin = '',
+        array $options = []
+    ) {
+        if (!isset($from) && !isset($tracking_pin)) {
+            $message = 'You must include either a $from date or a $tracking_pin.';
+            throw new \InvalidArgumentException($message);
+        }
         if (empty($to)) {
             $to = date('YmdHs');
         }
+        $this->verifyDates($from, $to);
         $query_params = "from={$from}&to{$to}";
 
         if (!empty($tracking_pin)) {
             $query_params = "trackingPIN={$tracking_pin}";
         }
 
+        $endpoint = sprintf(
+            'rs/%s/ncshipment?%s',
+            $this->config['customer_number'],
+            $query_params
+        );
         $response = $this->get(
-            "rs/{$this->config['customer_number']}/ncshipment?" . $query_params,
+            $endpoint,
             ['Accept' => 'application/vnd.cpc.ncshipment-v4+xml'],
             $options
         );
         return $response;
-
     }
 
-    public function requestNCShipmentRefund($shipment_id, $email, $options) {
+    /**
+     * Request a refund for a non-contract shipment that has been transmitted.
+     *
+     * @param string $shipment_id
+     *   The shipment id.
+     * @param string $email
+     *   The email that will receive updates from Canada Post.
+     * @param array $options
+     *   The options to pass along to the Guzzle Client.
+     *
+     * @return \DOMDocument
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @see https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/onestepshipping/shipmentrefund.jsf
+     * for all available options for the sender,destination and parcel params.
+     */
+    public function requestNCShipmentRefund($shipment_id, $email, $options)
+    {
         $content = [
-            'email' => $email
+            'email' => $email,
         ];
 
-        $xml = Array2XML::createXML('non-contract-shipment-refund-request', $content);
+        $xml = Array2XML::createXML(
+            'non-contract-shipment-refund-request',
+            $content
+        );
         $envelope = $xml->documentElement;
-        $envelope->setAttribute('xmlns',
-            'http://www.canadapost.ca/ws/ncshipment-v4');
+        $envelope->setAttribute(
+            'xmlns',
+            'http://www.canadapost.ca/ws/ncshipment-v4'
+        );
         $payload = $xml->saveXML();
         $response = $this->post(
             "rs/{$this->config['customer_number']}/ncshipment/{$shipment_id}/refund",
@@ -187,8 +247,8 @@ class NCShipment extends ClientBase
         array $parcel,
         array $options = []
     ) {
-        $this->verifyPostalCode($sender);
-        $this->verifyPostalCode($destination);
+        $this->formatPostalCode($sender['address-details']['postal-zip-code']);
+        $this->formatPostalCode($destination['address-details']['postal-zip-code']);
         $shipment_info = [
             'requested-shipping-point' => $destination['address-details']['postal-zip-code'],
             'delivery-spec' => [
