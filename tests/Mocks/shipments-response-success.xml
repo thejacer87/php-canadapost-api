@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shipments>
+    <link rel="shipment" href="https://XX/rs/1111111111/222222222/shipment/33333333333" media-type="application/vnd.cpc.shipment-v8+xml"></link>
+    <link rel="shipment" href="https://XX/rs/1111111111/222222222/shipment/44444444" media-type="application/vnd.cpc.shipment-v8+xml"></link>
+</shipments>
