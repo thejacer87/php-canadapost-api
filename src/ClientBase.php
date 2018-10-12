@@ -446,7 +446,7 @@ abstract class ClientBase
     {
         $valid_options = [];
         foreach ($options['option_codes'] as $optionCode) {
-            if (!in_array(strtoupper($optionCode), self::getOptionCodes())) {
+            if (!array_key_exists(strtoupper($optionCode), self::getOptionCodes())) {
                 $message = sprintf(
                     'Unsupported option code: "%s". Supported options are %s',
                     $optionCode,
