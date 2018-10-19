@@ -81,6 +81,13 @@ class Rating extends ClientBase
             $payload,
             $options
         );
+
+        $price_quotes = $response['price-quotes']['price-quote'];
+        // If only one service comes back, it does NOT return an array of quotes
+        // unlike when multiple services are requested.
+        if (array_key_exists('service-code', $price_quotes)) {
+            $response['price-quotes']['price-quote'] = [$price_quotes];
+        }
         return $response;
     }
 
