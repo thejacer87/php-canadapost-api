@@ -64,6 +64,10 @@ class Rating extends ClientBase
             $content['options']['option'] = $this->parseOptionCodes($options);
         }
 
+        if (!empty($this->config['contract_id'])) {
+            $content['contract-id'] = $this->config['contract_id'];
+        }
+
         $xml = Array2XML::createXML('mailing-scenario', $content);
         $envelope = $xml->documentElement;
         $envelope->setAttribute(
