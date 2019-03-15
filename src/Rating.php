@@ -26,6 +26,8 @@ class Rating extends ClientBase
      *   The array of options. Rating specific options:
      *     - service_codes: https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
      *     - options_codes: https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
+     * @param string $countryCode
+     *   The destination country code.
      *
      * @return \DOMDocument
      * @throws \GuzzleHttp\Exception\GuzzleException
@@ -34,7 +36,8 @@ class Rating extends ClientBase
         $originPostalCode,
         $postalCode,
         $weight,
-        array $options = []
+        array $options = [],
+        $countryCode = self::CANADA_COUNTRY_CODE
     ) {
         // Canada Post API needs all postal codes to be uppercase and no spaces.
         $originPostalCode = strtoupper(str_replace(' ', '', $originPostalCode));
@@ -52,6 +55,31 @@ class Rating extends ClientBase
                 ],
             ],
         ];
+
+        switch ($countryCode) {
+            case self::CANADA_COUNTRY_CODE:
+                $content['destination'] = [
+                    'domestic' => [
+                        'postal-code' => $postalCode,
+                    ],
+                ];
+                break;
+
+            case self::USA_COUNTRY_CODE:
+                $content['destination'] = [
+                    'united-states' => [
+                        'zip-code' => $postalCode,
+                    ],
+                ];
+                break;
+
+            default:
+                $content['destination'] = [
+                    'international' => [
+                        'country-code' => $countryCode,
+                    ],
+                ];
+        }
 
         // TODO split the options for Canada Post from the options for Guzzle.
         // They can either be separate variables or the Canada Post options can
