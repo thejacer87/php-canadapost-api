@@ -36,7 +36,7 @@ class Tracking extends ClientBase
         }
         $response = $this->get(
             "vis/track/{$type}/{$id}/summary",
-            ['Accept' => 'application/vnd.cpc.track+xml'],
+            ['Accept' => 'application/vnd.cpc.track-v2+xml'],
             $options
         );
         return $response;
@@ -66,8 +66,8 @@ class Tracking extends ClientBase
             throw new \InvalidArgumentException($message);
         }
         $response = $this->get(
-            "vis/track/{$type}/{$id}/details",
-            ['Accept' => 'application/vnd.cpc.track+xml'],
+            "vis/track/{$type}/{$id}/detail",
+            ['Accept' => 'application/vnd.cpc.track-v2+xml'],
             $options
         );
         return $response;
@@ -88,7 +88,7 @@ class Tracking extends ClientBase
     {
         $response = $this->getFile(
             "vis/signatureimage/{$pin}",
-            'vnd.cpc.track+xml',
+            'vnd.cpc.track-v2+xml',
             $options
         );
         return $response;
@@ -111,7 +111,7 @@ class Tracking extends ClientBase
     ) {
         $response = $this->getFile(
             "vis/certificate/{$pin}",
-            'vnd.cpc.track+xml',
+            'vnd.cpc.track-v2+xml',
             $options
         );
         return $response;
