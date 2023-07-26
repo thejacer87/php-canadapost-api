@@ -22,6 +22,8 @@ class Rating extends ClientBase
      *   The destination postal code.
      * @param float $weight
      *   The weight of the package (kg).
+     * @param Dimension $dimensions
+     *   The dimensions of the package.
      * @param array $options
      *   The array of options. Rating specific options:
      *     - service_codes: https://www.canadapost.ca/cpo/mc/business/productsservices/developers/services/rating/getrates/default.jsf
@@ -34,6 +36,7 @@ class Rating extends ClientBase
         $originPostalCode,
         $postalCode,
         $weight,
+        $dimensions = null,
         array $options = []
     ) {
         // Canada Post API needs all postal codes to be uppercase and no spaces.
@@ -52,6 +55,13 @@ class Rating extends ClientBase
                 ],
             ],
         ];
+        if ($dimensions) {
+          $content['parcel-characteristics']['dimensions'] = [
+            'length' => $dimensions->getLength(),
+            'width' => $dimensions->getWidth(),
+            'height' => $dimensions->getHeight(),
+          ];
+        }
 
         // TODO split the options for Canada Post from the options for Guzzle.
         // They can either be separate variables or the Canada Post options can
@@ -72,15 +82,15 @@ class Rating extends ClientBase
         $envelope = $xml->documentElement;
         $envelope->setAttribute(
             'xmlns',
-            'http://www.canadapost.ca/ws/ship/rate-v3'
+            'http://www.canadapost.ca/ws/ship/rate-v4'
         );
         $payload = $xml->saveXML();
 
         $response = $this->post(
             "rs/ship/price",
             [
-                'Content-Type' => 'application/vnd.cpc.ship.rate-v3+xml',
-                'Accept' => 'application/vnd.cpc.ship.rate-v3+xml',
+                'Content-Type' => 'application/vnd.cpc.ship.rate-v4+xml',
+                'Accept' => 'application/vnd.cpc.ship.rate-v4+xml',
             ],
             $payload,
             $options
