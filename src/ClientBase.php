@@ -27,6 +27,12 @@ abstract class ClientBase
     const BASE_URL_PRODUCTION = 'https://soa-gw.canadapost.ca';
 
     /**
+     * Standard 2-character country codes.
+     */
+    const USA_COUNTRY_CODE = 'US';
+    const CANADA_COUNTRY_CODE = 'CA';
+
+    /**
      * The configuration array.
      *
      * @var array
